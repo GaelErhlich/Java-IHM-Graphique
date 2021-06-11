@@ -23,6 +23,7 @@ public class CadreTerre implements CadreTerreInterface {
 
         this.initialiseFormes(width, height);
         this.initialiseCamera();
+        this.initialiseEclairageTerre();
         //this.ajouter1carreDEBUG();
 
     }
@@ -51,7 +52,26 @@ public class CadreTerre implements CadreTerreInterface {
         subScene.setCamera(camera);
     }
 
-    private void ajouter1carreDEBUG() {
+
+    private void initialiseEclairageTerre() {
+
+        System.out.println( sphereTerre.getChildren().get(0) );
+
+        for(float t=0f; t < 2*Math.PI; t += 2*Math.PI/3) {
+
+                PointLight light = new PointLight(Color.WHITE);
+                double x = 10*Math.cos(t);
+                double z = 10*Math.sin(t);
+                light.setTranslateX(x);
+                light.setTranslateZ(z);
+                light.getScope().add(sphereTerre);
+                parent.getChildren().add(light);
+        }
+        System.out.println("Children of *parent* : "+parent.getChildren().size());
+    }
+
+
+    private void ajouter1carreDEBUG(double x, double z) {
         Box carre = new Box(1,1,1);
 
         Color color = Color.BLUE;
@@ -60,8 +80,8 @@ public class CadreTerre implements CadreTerreInterface {
         material.setSpecularColor(color);
         carre.setMaterial(material);
 
-        carre.setTranslateZ(2);
-        carre.setTranslateX(2);
+        carre.setTranslateX(x);
+        carre.setTranslateZ(z);
 
         parent.getChildren().add(carre);
     }
