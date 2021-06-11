@@ -4,6 +4,6 @@ import javafx.scene.layout.Pane;
 
 public interface CadreTerreInterface {
 
-    public Pane getBackgroundPane();
+    public Pane getPaneFond();
 
 }

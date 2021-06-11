@@ -5,7 +5,9 @@ import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import javafx.scene.Group;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.MeshView;
 
 import java.net.URL;
@@ -18,7 +20,7 @@ public class CadreTerre implements CadreTerreInterface {
 
     public CadreTerre(int width, int height) {
 
-        initialiseFormes(width, height);
+        this.initialiseFormes(width, height);
 
     }
 
@@ -35,12 +37,15 @@ public class CadreTerre implements CadreTerreInterface {
         sphereTerre = new Group(meshViews);
         subScene = new SubScene(sphereTerre, width, height, true, SceneAntialiasing.BALANCED);
         paneFond = new Pane(subScene);
+
+        subScene.setFill(Color.BLACK);
+        sphereTerre.setTranslateZ(10);
     }
 
 
 
     @Override
-    public Pane getBackgroundPane() {
+    public Pane getPaneFond() {
         return paneFond;
     }
 }
