@@ -2,12 +2,12 @@ package et3.projetjig.terre;
 
 import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
-import javafx.scene.Group;
-import javafx.scene.SceneAntialiasing;
-import javafx.scene.SubScene;
-import javafx.scene.layout.Background;
+import et3.outils3d.CameraManager;
+import javafx.scene.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Box;
 import javafx.scene.shape.MeshView;
 
 import java.net.URL;
@@ -15,12 +15,15 @@ import java.net.URL;
 public class CadreTerre implements CadreTerreInterface {
 
     private Group sphereTerre;
+    private Group parent;
     private SubScene subScene;
     private Pane paneFond;
 
     public CadreTerre(int width, int height) {
 
         this.initialiseFormes(width, height);
+        this.initialiseCamera();
+        //this.ajouter1carreDEBUG();
 
     }
 
@@ -35,11 +38,32 @@ public class CadreTerre implements CadreTerreInterface {
         MeshView[] meshViews = objImporter.getImport();
 
         sphereTerre = new Group(meshViews);
-        subScene = new SubScene(sphereTerre, width, height, true, SceneAntialiasing.BALANCED);
+        parent = new Group(sphereTerre);
+        subScene = new SubScene(parent, width, height, true, SceneAntialiasing.BALANCED);
         paneFond = new Pane(subScene);
 
         subScene.setFill(Color.BLACK);
-        sphereTerre.setTranslateZ(10);
+    }
+
+    private void initialiseCamera() {
+        Camera camera = new PerspectiveCamera(true);
+        CameraManager cameraManager = new CameraManager(camera, paneFond, parent);
+        subScene.setCamera(camera);
+    }
+
+    private void ajouter1carreDEBUG() {
+        Box carre = new Box(1,1,1);
+
+        Color color = Color.BLUE;
+        PhongMaterial material = new PhongMaterial(color);
+        material.setSpecularColor(color);
+        material.setSpecularColor(color);
+        carre.setMaterial(material);
+
+        carre.setTranslateZ(2);
+        carre.setTranslateX(2);
+
+        parent.getChildren().add(carre);
     }
 
 
