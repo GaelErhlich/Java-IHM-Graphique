@@ -1,16 +1,12 @@
 package et3.projetjig.terre;
 
-import com.interactivemesh.jfx.importer.ImportException;
-import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import et3.outils3d.CameraManager;
+import et3.projetjig.terre.sphereterre.SphereTerre;
 import javafx.scene.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.MeshView;
-
-import java.net.URL;
 
 public class CadreTerre extends Pane implements CadreTerreInterface {
 
@@ -45,16 +41,10 @@ public class CadreTerre extends Pane implements CadreTerreInterface {
      * @param height
      */
     private void initialiseFormes(int width, int height) {
-        ObjModelImporter objImporter = new ObjModelImporter();
-        try {
-            URL modelURL = this.getClass().getResource("Earth/earth.obj");
-            objImporter.read(modelURL);
-        } catch (ImportException e) {
-            e.printStackTrace();
-        }
-        MeshView[] meshViews = objImporter.getImport();
 
-        sphereTerre = new Group(meshViews);
+        
+        sphereTerre = new SphereTerre();
+
         enfantSubScene = new Group(sphereTerre);
         subScene = new SubScene(enfantSubScene, width, height, true, SceneAntialiasing.BALANCED);
         parentSubScene = new Group(subScene);
