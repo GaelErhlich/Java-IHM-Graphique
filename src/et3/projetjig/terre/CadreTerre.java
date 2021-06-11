@@ -10,13 +10,28 @@ import javafx.scene.shape.Box;
 
 public class CadreTerre extends Pane implements CadreTerreInterface {
 
-    private Group sphereTerre;
+    /**
+     * Groupe contenant les Mesh de la Terre
+      */
+    private SphereTerre sphereTerre;
+    /**
+     * Groupe à la racine du graphe 3D
+     */
     private Group enfantSubScene;
+    /**
+     * La SubScene contenant tout ça
+     */
     private SubScene subScene;
+    /**
+     * Le Group qui contient la SubScene
+     */
     private Group parentSubScene;
 
     private Camera camera;
     private CameraManager cameraManager;
+
+    private CadreTerreEventsManager eventsManager;
+
 
 
     /**
@@ -29,6 +44,8 @@ public class CadreTerre extends Pane implements CadreTerreInterface {
         this.initialiseFormes(width, height);
         this.initialiseCamera();
         this.initialiseEclairageTerre();
+
+        eventsManager = new CadreTerreEventsManager(this);
         //this.ajouter1carreDEBUG();
 
     }
@@ -102,4 +119,9 @@ public class CadreTerre extends Pane implements CadreTerreInterface {
         enfantSubScene.getChildren().add(carre);
     }
 
+
+
+    public SphereTerre getSphereTerre() {
+        return sphereTerre;
+    }
 }
