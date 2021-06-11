@@ -1,4 +1,4 @@
-package et3.outils3d;
+package et3.maths;
 
 import javafx.geometry.Point3D;
 

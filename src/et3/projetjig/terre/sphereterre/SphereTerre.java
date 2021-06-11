@@ -2,7 +2,7 @@ package et3.projetjig.terre.sphereterre;
 
 import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
-import et3.outils3d.CoordonneesConvert;
+import et3.maths.CoordonneesConvert;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.paint.Material;

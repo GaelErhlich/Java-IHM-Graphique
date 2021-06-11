@@ -1,6 +1,5 @@
 package et3.projetjig.terre;
 
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
