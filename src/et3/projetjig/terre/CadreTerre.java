@@ -12,13 +12,22 @@ import javafx.scene.shape.MeshView;
 
 import java.net.URL;
 
-public class CadreTerre implements CadreTerreInterface {
+public class CadreTerre extends Pane implements CadreTerreInterface {
 
     private Group sphereTerre;
-    private Group parent;
+    private Group enfantSubScene;
     private SubScene subScene;
-    private Pane paneFond;
+    private Group parentSubScene;
 
+    private Camera camera;
+    private CameraManager cameraManager;
+
+
+    /**
+     * Définit un Pane 3D contenant la Terre, avec les dimensions (2D) spécifiées
+     * @param width la largeur du Pane 3D
+     * @param height la hauteur du Pane 3D
+     */
     public CadreTerre(int width, int height) {
 
         this.initialiseFormes(width, height);
@@ -28,6 +37,13 @@ public class CadreTerre implements CadreTerreInterface {
 
     }
 
+    /**
+     * Met en place une sphère représentant la Terre ainsi qu'une Subscene
+     * contenant un groupe "parent" et la sphère,
+     * la Subscene elle-même contenue dans un Pane.
+     * @param width
+     * @param height
+     */
     private void initialiseFormes(int width, int height) {
         ObjModelImporter objImporter = new ObjModelImporter();
         try {
@@ -39,23 +55,28 @@ public class CadreTerre implements CadreTerreInterface {
         MeshView[] meshViews = objImporter.getImport();
 
         sphereTerre = new Group(meshViews);
-        parent = new Group(sphereTerre);
-        subScene = new SubScene(parent, width, height, true, SceneAntialiasing.BALANCED);
-        paneFond = new Pane(subScene);
+        enfantSubScene = new Group(sphereTerre);
+        subScene = new SubScene(enfantSubScene, width, height, true, SceneAntialiasing.BALANCED);
+        parentSubScene = new Group(subScene);
+        this.getChildren().add(parentSubScene);
 
         subScene.setFill(Color.BLACK);
     }
 
+    /**
+     * Initialise la caméra et le CameraManager, puis les met à la Subscene
+     */
     private void initialiseCamera() {
-        Camera camera = new PerspectiveCamera(true);
-        CameraManager cameraManager = new CameraManager(camera, paneFond, parent);
+        camera = new PerspectiveCamera(true);
+        cameraManager = new CameraManager(camera, this, enfantSubScene);
         subScene.setCamera(camera);
     }
 
 
+    /**
+     * Met un éclairage constitué de 3 PointLight autour de la Terre
+     */
     private void initialiseEclairageTerre() {
-
-        System.out.println( sphereTerre.getChildren().get(0) );
 
         for(float t=0f; t < 2*Math.PI; t += 2*Math.PI/3) {
 
@@ -65,12 +86,17 @@ public class CadreTerre implements CadreTerreInterface {
                 light.setTranslateX(x);
                 light.setTranslateZ(z);
                 light.getScope().add(sphereTerre);
-                parent.getChildren().add(light);
+                enfantSubScene.getChildren().add(light);
         }
-        System.out.println("Children of *parent* : "+parent.getChildren().size());
     }
 
 
+    /**
+     * Ajouter un carré bleu aux coordonnées indiquées avec y=0.
+     * Conçu pour du debug
+     * @param x la coordonnée x
+     * @param z la coordonnée z
+     */
     private void ajouter1carreDEBUG(double x, double z) {
         Box carre = new Box(1,1,1);
 
@@ -83,13 +109,7 @@ public class CadreTerre implements CadreTerreInterface {
         carre.setTranslateX(x);
         carre.setTranslateZ(z);
 
-        parent.getChildren().add(carre);
+        enfantSubScene.getChildren().add(carre);
     }
 
-
-
-    @Override
-    public Pane getPaneFond() {
-        return paneFond;
-    }
 }
