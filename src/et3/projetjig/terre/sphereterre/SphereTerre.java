@@ -3,10 +3,15 @@ package et3.projetjig.terre.sphereterre;
 import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import et3.maths.CoordonneesConvert;
+import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.MeshView;
+import javafx.scene.shape.Sphere;
 import javafx.scene.shape.TriangleMesh;
 
 import java.net.URL;
@@ -17,8 +22,12 @@ public class SphereTerre extends Group {
     public final static double PAS_CARRES = 10;
     public final static double CARRES_RAYON = 1.2;
 
+    public final static double TEXTURE_LAT_OFFSET = 0.0;
+    public final static double TEXTURE_LON_OFFSET = -2.8;
+
 
     Group carres = new Group();
+    Group localisations = new Group();
 
 
     public SphereTerre() {
@@ -39,6 +48,10 @@ public class SphereTerre extends Group {
 
         // D'autres éléments d'initialisation
         this.getChildren().add(carres);
+        this.getChildren().add(localisations);
+
+        ajouteLocalisation( 48.447911f, -4.418519f );
+        afficherAxesDEBUG();
 
 
     }
@@ -48,13 +61,13 @@ public class SphereTerre extends Group {
     private Group creerCarreRigide(double latMin, double latMax, double lonMin, double lonMax, Material material) {
 
         Point3D topRight = CoordonneesConvert.geoCoordTo3dCoord((float) latMin, (float) lonMax,
-                CARRES_RAYON, 0.0f, -2.8f);
+                Point3D.ZERO, CARRES_RAYON, TEXTURE_LAT_OFFSET, TEXTURE_LON_OFFSET);
         Point3D bottomRight = CoordonneesConvert.geoCoordTo3dCoord((float) latMax, (float) lonMax,
-                CARRES_RAYON, 0.0f, -2.8f);
+                Point3D.ZERO, CARRES_RAYON, TEXTURE_LAT_OFFSET, TEXTURE_LON_OFFSET);
         Point3D bottomLeft = CoordonneesConvert.geoCoordTo3dCoord((float) latMax, (float) lonMin,
-                CARRES_RAYON, 0.0f, -2.8f);
+                Point3D.ZERO, CARRES_RAYON, TEXTURE_LAT_OFFSET, TEXTURE_LON_OFFSET);
         Point3D topLeft = CoordonneesConvert.geoCoordTo3dCoord((float) latMin, (float) lonMin,
-                CARRES_RAYON, 0.0f, -2.8f);
+                Point3D.ZERO, CARRES_RAYON, TEXTURE_LAT_OFFSET, TEXTURE_LON_OFFSET);
 
 
         final float[] points = {
@@ -110,6 +123,43 @@ public class SphereTerre extends Group {
 
     public void supprimeCarres() {
         this.carres.getChildren().clear();
+    }
+
+
+    public void ajouteLocalisation(double latitude, double longitude) {
+
+        Point3D coord3d = CoordonneesConvert.geoCoordTo3dCoord(latitude, longitude,
+                Point3D.ZERO, 1.0, TEXTURE_LAT_OFFSET, TEXTURE_LON_OFFSET);
+
+        Sphere localisation = new Sphere(0.04);
+        PhongMaterial material = new PhongMaterial(Color.ORANGE);
+        localisation.setMaterial(material);
+
+        localisation.setTranslateX(coord3d.getX());
+        localisation.setTranslateY(coord3d.getY());
+        localisation.setTranslateZ(coord3d.getZ());
+
+        localisations.getChildren().add(localisation);
+    }
+
+
+
+
+    private void afficherAxesDEBUG() {
+        Line ligneRouge = new Line(0, 0, 4, 0);
+        ligneRouge.setStroke(Color.RED);
+        Line ligneVerte = new Line(0, 0, 0, 4);
+        ligneVerte.setStroke(Color.GREEN);
+        Line ligneBleue = new Line(0, 0, 4, 0);
+        ligneBleue.setStroke(Color.BLUE);
+        ligneBleue.setRotationAxis(new Point3D(0, 1, 0));
+        ligneBleue.setRotate(90);
+        ligneBleue.setTranslateX(-2);
+        ligneBleue.setTranslateZ(2);
+
+        this.getChildren().add( ligneRouge );
+        this.getChildren().add( ligneVerte );
+        this.getChildren().add( ligneBleue );
     }
 
 

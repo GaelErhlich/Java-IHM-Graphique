@@ -45,7 +45,7 @@ public class CadreTerre extends Pane implements CadreTerreInterface {
         this.initialiseCamera();
         this.initialiseEclairageTerre();
 
-        eventsManager = new CadreTerreEventsManager(this);
+        eventsManager = new CadreTerreEventsManager(this, sphereTerre);
         //this.ajouter1carreDEBUG();
 
     }
