@@ -11,11 +11,11 @@ public class MainTest extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        CadreTerre cadreTerre = new CadreTerre(500,500);
-        Pane content = cadreTerre;
+        FenetreDEBUG fenetre = new FenetreDEBUG();
+        CadreTerre cadreTerre = new CadreTerre(500,500, fenetre);
 
         primaryStage.setTitle("La Terre (Composant 3D seul)");
-        primaryStage.setScene( new Scene(content) );
+        primaryStage.setScene( new Scene(cadreTerre) );
         primaryStage.show();
     }
 

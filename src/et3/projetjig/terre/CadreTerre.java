@@ -1,6 +1,7 @@
 package et3.projetjig.terre;
 
 import et3.outils3d.CameraManager;
+import et3.projetjig.fenetre.FenetreInterface;
 import et3.projetjig.terre.sphereterre.SphereTerre;
 import javafx.scene.*;
 import javafx.scene.layout.Pane;
@@ -9,6 +10,8 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 
 public class CadreTerre extends Pane implements CadreTerreInterface {
+
+    private FenetreInterface fenetre;
 
     /**
      * Groupe contenant les Mesh de la Terre
@@ -30,32 +33,33 @@ public class CadreTerre extends Pane implements CadreTerreInterface {
     private Camera camera;
     private CameraManager cameraManager;
 
-    private CadreTerreEventsManager eventsManager;
-
 
 
     /**
      * Définit un Pane 3D contenant la Terre, avec les dimensions (2D) spécifiées
      * @param width la largeur du Pane 3D
      * @param height la hauteur du Pane 3D
+     * @param fenetre Fenêtre à laquelle correspond ce cadre, à laquelle envoyer des informations
      */
-    public CadreTerre(int width, int height) {
+    public CadreTerre(int width, int height, FenetreInterface fenetre) {
+        this.fenetre = fenetre;
 
         this.initialiseFormes(width, height);
         this.initialiseCamera();
         this.initialiseEclairageTerre();
 
-        eventsManager = new CadreTerreEventsManager(this, sphereTerre);
-        //this.ajouter1carreDEBUG();
+        // Déclaration des événements
+        new CadreTerreEventsManager(this, sphereTerre);
 
     }
+
 
     /**
      * Met en place une sphère représentant la Terre ainsi qu'une Subscene
      * contenant un groupe "parent" et la sphère,
      * la Subscene elle-même contenue dans un Pane.
-     * @param width
-     * @param height
+     * @param width largeur du cadre dans la fenêtre
+     * @param height hauteur du cadre dans la fenêtre
      */
     private void initialiseFormes(int width, int height) {
 
