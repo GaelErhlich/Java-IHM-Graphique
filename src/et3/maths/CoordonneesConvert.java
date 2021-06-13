@@ -30,6 +30,18 @@ public class CoordonneesConvert {
 
 
     /**
+     * Projette un point dans l'espace sur la surface d'une sphère dans l'espace
+     * @param point3D Point à projeter
+     * @param centreSphere Point au centre de la sphère
+     * @param rayonSphere Rayon de la sphère
+     * @return Un point 3D dans le même espace, à la surface de la sphère
+     */
+    public static Point3D projPoint3dSurSphere(Point3D point3D, Point3D centreSphere, double rayonSphere) {
+        return point3D.subtract(centreSphere).normalize().multiply(rayonSphere);
+    }
+
+
+    /**
      * Convertit des coordonnées dans l'espace 3D sur (ou autour de) une sphère en latitude et longitude
      * @param coord3d Coordonnées dans l'espace du point recherché (pas forcément à la surface de la sphère)
      * @param centre Coordonnées dans l'espace du centre de la sphère

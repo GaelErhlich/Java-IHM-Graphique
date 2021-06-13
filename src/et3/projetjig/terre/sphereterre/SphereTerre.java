@@ -3,11 +3,13 @@ package et3.projetjig.terre.sphereterre;
 import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import et3.maths.CoordonneesConvert;
+import et3.projetjig.terre.sphereterre.exceptions.NullLocalisationPrincipale;
 import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
+import javafx.scene.paint.Paint;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.MeshView;
@@ -28,6 +30,8 @@ public class SphereTerre extends Group {
 
     Group carres = new Group();
     Group localisations = new Group();
+    Group localisationPrincipale = new Group();
+    Point2D locPrincipaleCoords2d = null;
 
 
     public SphereTerre() {
@@ -48,10 +52,11 @@ public class SphereTerre extends Group {
 
         // D'autres éléments d'initialisation
         this.getChildren().add(carres);
+        this.getChildren().add(localisationPrincipale);
         this.getChildren().add(localisations);
 
         ajouteLocalisation( 48.447911f, -4.418519f );
-        afficherAxesDEBUG();
+        //afficherAxesDEBUG();
 
 
     }
@@ -126,20 +131,55 @@ public class SphereTerre extends Group {
     }
 
 
-    public void ajouteLocalisation(double latitude, double longitude) {
+    private Sphere creeLocalisation(double latitude, double longitude, Color color) {
 
         Point3D coord3d = CoordonneesConvert.geoCoordTo3dCoord(latitude, longitude,
                 Point3D.ZERO, 1.0, TEXTURE_LAT_OFFSET, TEXTURE_LON_OFFSET);
 
-        Sphere localisation = new Sphere(0.04);
-        PhongMaterial material = new PhongMaterial(Color.ORANGE);
+        Sphere localisation = new Sphere(0.01);
+        PhongMaterial material = new PhongMaterial(color);
         localisation.setMaterial(material);
 
         localisation.setTranslateX(coord3d.getX());
         localisation.setTranslateY(coord3d.getY());
         localisation.setTranslateZ(coord3d.getZ());
 
+        return localisation;
+    }
+
+    public void ajouteLocalisation(double lat, double lon) {
+        Sphere localisation = creeLocalisation(lat, lon, Color.YELLOW);
         localisations.getChildren().add(localisation);
+    }
+
+    public void ajouteLocalisation(Point2D latEtLon) {
+        ajouteLocalisation(latEtLon.getX(), latEtLon.getY());
+    }
+
+    public void supprimerLocalisations() {
+        localisations.getChildren().clear();
+    }
+
+    public void definirLocPrincipale(double lat, double lon) {
+        deselectionnerLocPrincipale();
+        Sphere localisation = creeLocalisation(lat, lon, Color.RED);
+        localisationPrincipale.getChildren().add(localisation);
+        locPrincipaleCoords2d = new Point2D(lat, lon);
+    }
+
+    public void definirLocPrincipale(Point2D latEtLon) {
+        definirLocPrincipale(latEtLon.getX(), latEtLon.getY());
+    }
+
+    public Point2D getLocPrincipaleCoords2d() throws NullLocalisationPrincipale {
+        if(locPrincipaleCoords2d == null) {
+            throw new NullLocalisationPrincipale(this);
+        }
+        return locPrincipaleCoords2d;
+    }
+
+    public void deselectionnerLocPrincipale() {
+        localisationPrincipale.getChildren().clear();
     }
 
 
