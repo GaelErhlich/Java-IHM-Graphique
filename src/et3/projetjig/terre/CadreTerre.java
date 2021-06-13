@@ -8,6 +8,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import kungfoo.geohash.src.main.java.ch.hsr.geohash.GeoHash;
 
 public class CadreTerre extends Pane implements CadreTerreInterface {
 
@@ -49,7 +50,7 @@ public class CadreTerre extends Pane implements CadreTerreInterface {
         this.initialiseEclairageTerre();
 
         // Déclaration des événements
-        new CadreTerreEventsManager(this, sphereTerre);
+        CadreTerreEvents.declare(this);
 
     }
 
@@ -101,31 +102,22 @@ public class CadreTerre extends Pane implements CadreTerreInterface {
         }
     }
 
-
     /**
-     * Ajouter un carré bleu aux coordonnées indiquées avec y=0.
-     * Conçu pour du debug
-     * @param x la coordonnée x
-     * @param z la coordonnée z
+     * Notifie la fenêtre qu'un nouveau GeoHash a été demandé par l'utilisateur
+     * @param geoHash le Geohash qui va être envoyé à la fenêtre
      */
-    private void ajouter1carreDEBUG(double x, double z) {
-        Box carre = new Box(1,1,1);
-
-        Color color = Color.BLUE;
-        PhongMaterial material = new PhongMaterial(color);
-        material.setSpecularColor(color);
-        material.setSpecularColor(color);
-        carre.setMaterial(material);
-
-        carre.setTranslateX(x);
-        carre.setTranslateZ(z);
-
-        enfantSubScene.getChildren().add(carre);
+    void envoiNouvGeoHashVersFenetre(GeoHash geoHash) {
+        fenetre.recoitGeoHashParUser(geoHash);
     }
 
 
 
     public SphereTerre getSphereTerre() {
         return sphereTerre;
+    }
+
+    @Override
+    public void recoitGeoHash(GeoHash geoHash) {
+        sphereTerre.setGeoHash(geoHash);
     }
 }

@@ -2,11 +2,14 @@ package et3.projetjig.terre.sphereterre;
 
 import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
+import com.sun.istack.internal.NotNull;
 import et3.maths.CoordonneesConvert;
 import et3.projetjig.terre.sphereterre.exceptions.NullLocalisationPrincipale;
+import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.Paint;
@@ -15,6 +18,8 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Sphere;
 import javafx.scene.shape.TriangleMesh;
+import kungfoo.geohash.src.main.java.ch.hsr.geohash.BoundingBox;
+import kungfoo.geohash.src.main.java.ch.hsr.geohash.GeoHash;
 
 import java.net.URL;
 
@@ -22,20 +27,22 @@ import java.net.URL;
 public class SphereTerre extends Group {
 
     public final static double PAS_CARRES = 10;
-    public final static double CARRES_RAYON = 1.2;
+    public final static double CARRES_RAYON = 1.02;
 
     public final static double TEXTURE_LAT_OFFSET = 0.0;
     public final static double TEXTURE_LON_OFFSET = -2.8;
 
 
     Group carres = new Group();
+    Group carresGeoHash = new Group();
     Group localisations = new Group();
     Group localisationPrincipale = new Group();
     Point2D locPrincipaleCoords2d = null;
 
+    GeoHash geoHashPrincipal = GeoHash.fromGeohashString("u09t");
+
 
     public SphereTerre() {
-
 
         // Importation de la Terre
         ObjModelImporter objImporter = new ObjModelImporter();
@@ -52,11 +59,11 @@ public class SphereTerre extends Group {
 
         // D'autres éléments d'initialisation
         this.getChildren().add(carres);
+        this.getChildren().add(carresGeoHash);
         this.getChildren().add(localisationPrincipale);
         this.getChildren().add(localisations);
 
-        ajouteLocalisation( 48.447911f, -4.418519f );
-        //afficherAxesDEBUG();
+        majCarreGeoHash();
 
 
     }
@@ -105,9 +112,8 @@ public class SphereTerre extends Group {
     }
 
 
-    public void ajouteCarre(double latMin, double latMax, double lonMin, double lonMax, Material material) {
-
-        Group souscarres = new Group();
+    private void ajouteCarreANode(double latMin, double latMax, double lonMin, double lonMax,
+                                  Material material, Group listeNode) {
 
         double latLocalMax, lonLocalMax;
         for(double lat=latMin; lat < latMax; lat += PAS_CARRES) {
@@ -115,14 +121,19 @@ public class SphereTerre extends Group {
             for(double lon=lonMin; lon < lonMax; lon += PAS_CARRES) {
                 lonLocalMax = Math.min(lon+PAS_CARRES, lonMax);
 
-                souscarres.getChildren().add(
+                listeNode.getChildren().add(
                         creerCarreRigide(lat, latLocalMax, lon, lonLocalMax, material)
                 );
-
             }
         }
+    }
 
+
+    public void ajouteCarre(double latMin, double latMax, double lonMin, double lonMax, Material material) {
+
+        Group souscarres = new Group();
         this.carres.getChildren().add(souscarres);
+        ajouteCarreANode(latMin, latMax, lonMin, lonMax, material, souscarres);
     }
 
 
@@ -181,6 +192,28 @@ public class SphereTerre extends Group {
     public void deselectionnerLocPrincipale() {
         localisationPrincipale.getChildren().clear();
     }
+
+
+
+
+    private void majCarreGeoHash() {
+
+        PhongMaterial material = new PhongMaterial( new Color(1.0, 0.2, 0.0, 0.1) );
+        BoundingBox box = geoHashPrincipal.getBoundingBox();
+        carresGeoHash.getChildren().clear();
+        ajouteCarreANode(
+                box.getSouthLatitude(), box.getNorthLatitude(),
+                box.getWestLongitude(), box.getEastLongitude(),
+                material, carresGeoHash
+        );
+
+    }
+
+    public void setGeoHash(@NotNull GeoHash geoHash) {
+        this.geoHashPrincipal = geoHash;
+        majCarreGeoHash();
+    }
+
 
 
 
