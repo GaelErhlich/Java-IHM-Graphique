@@ -6,8 +6,6 @@ import et3.projetjig.terre.sphereterre.SphereTerre;
 import javafx.scene.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Box;
 import kungfoo.geohash.src.main.java.ch.hsr.geohash.GeoHash;
 
 public class CadreTerre extends Pane implements CadreTerreInterface {

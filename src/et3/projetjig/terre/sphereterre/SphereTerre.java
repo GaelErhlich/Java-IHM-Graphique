@@ -5,21 +5,17 @@ import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import com.sun.istack.internal.NotNull;
 import et3.maths.CoordonneesConvert;
 import et3.projetjig.terre.sphereterre.exceptions.NullLocalisationPrincipale;
-import javafx.collections.ObservableList;
+import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
-import javafx.scene.paint.Paint;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.MeshView;
-import javafx.scene.shape.Sphere;
-import javafx.scene.shape.TriangleMesh;
+import javafx.scene.shape.*;
 import kungfoo.geohash.src.main.java.ch.hsr.geohash.BoundingBox;
 import kungfoo.geohash.src.main.java.ch.hsr.geohash.GeoHash;
+import kungfoo.geohash.src.main.java.ch.hsr.geohash.WGS84Point;
 
 import java.net.URL;
 
@@ -28,18 +24,19 @@ public class SphereTerre extends Group {
 
     public final static double PAS_CARRES = 10;
     public final static double CARRES_RAYON = 1.02;
+    public final static double LOCALISATION_RAYON = 0.02;
 
     public final static double TEXTURE_LAT_OFFSET = 0.0;
     public final static double TEXTURE_LON_OFFSET = -2.8;
 
 
-    Group carres = new Group();
-    Group carresGeoHash = new Group();
-    Group localisations = new Group();
-    Group localisationPrincipale = new Group();
-    Point2D locPrincipaleCoords2d = null;
+    private Group carres = new Group();
+    private Group carresGeoHash = new Group();
+    private Group localisations = new Group();
+    private Group localisationPrincipale = new Group();
 
-    GeoHash geoHashPrincipal = GeoHash.fromGeohashString("u09t");
+    private Point2D locPrincipaleCoords2d = new Point2D(48.7093, 2.1710);
+    private int nombreDeBitsGeoH = 15;
 
 
     public SphereTerre() {
@@ -63,6 +60,8 @@ public class SphereTerre extends Group {
         this.getChildren().add(localisationPrincipale);
         this.getChildren().add(localisations);
 
+        // On affiche la localisation principale et le geohash
+        setLocPrincipale(locPrincipaleCoords2d);
         majCarreGeoHash();
 
 
@@ -80,6 +79,7 @@ public class SphereTerre extends Group {
                 Point3D.ZERO, CARRES_RAYON, TEXTURE_LAT_OFFSET, TEXTURE_LON_OFFSET);
         Point3D topLeft = CoordonneesConvert.geoCoordTo3dCoord((float) latMin, (float) lonMin,
                 Point3D.ZERO, CARRES_RAYON, TEXTURE_LAT_OFFSET, TEXTURE_LON_OFFSET);
+
 
 
         final float[] points = {
@@ -100,6 +100,7 @@ public class SphereTerre extends Group {
         };
 
 
+
         final TriangleMesh triangleMesh = new TriangleMesh();
         triangleMesh.getPoints().setAll(points);
         triangleMesh.getTexCoords().setAll(texCoords);
@@ -115,12 +116,12 @@ public class SphereTerre extends Group {
     private void ajouteCarreANode(double latMin, double latMax, double lonMin, double lonMax,
                                   Material material, Group listeNode) {
 
+
         double latLocalMax, lonLocalMax;
         for(double lat=latMin; lat < latMax; lat += PAS_CARRES) {
             latLocalMax = Math.min(lat+PAS_CARRES, latMax);
             for(double lon=lonMin; lon < lonMax; lon += PAS_CARRES) {
                 lonLocalMax = Math.min(lon+PAS_CARRES, lonMax);
-
                 listeNode.getChildren().add(
                         creerCarreRigide(lat, latLocalMax, lon, lonLocalMax, material)
                 );
@@ -147,7 +148,7 @@ public class SphereTerre extends Group {
         Point3D coord3d = CoordonneesConvert.geoCoordTo3dCoord(latitude, longitude,
                 Point3D.ZERO, 1.0, TEXTURE_LAT_OFFSET, TEXTURE_LON_OFFSET);
 
-        Sphere localisation = new Sphere(0.01);
+        Sphere localisation = new Sphere(LOCALISATION_RAYON);
         PhongMaterial material = new PhongMaterial(color);
         localisation.setMaterial(material);
 
@@ -171,15 +172,16 @@ public class SphereTerre extends Group {
         localisations.getChildren().clear();
     }
 
-    public void definirLocPrincipale(double lat, double lon) {
+    public void setLocPrincipale(double lat, double lon) {
+
         deselectionnerLocPrincipale();
         Sphere localisation = creeLocalisation(lat, lon, Color.RED);
         localisationPrincipale.getChildren().add(localisation);
         locPrincipaleCoords2d = new Point2D(lat, lon);
     }
 
-    public void definirLocPrincipale(Point2D latEtLon) {
-        definirLocPrincipale(latEtLon.getX(), latEtLon.getY());
+    public void setLocPrincipale(Point2D latEtLon) {
+        setLocPrincipale(latEtLon.getX(), latEtLon.getY());
     }
 
     public Point2D getLocPrincipaleCoords2d() throws NullLocalisationPrincipale {
@@ -194,29 +196,59 @@ public class SphereTerre extends Group {
     }
 
 
+    public int getNombreDeBits() {
+        return nombreDeBitsGeoH;
+    }
 
 
     private void majCarreGeoHash() {
 
         PhongMaterial material = new PhongMaterial( new Color(1.0, 0.2, 0.0, 0.1) );
-        BoundingBox box = geoHashPrincipal.getBoundingBox();
+        BoundingBox box = this.getGeoHash().getBoundingBox();
+
         carresGeoHash.getChildren().clear();
         ajouteCarreANode(
                 box.getSouthLatitude(), box.getNorthLatitude(),
                 box.getWestLongitude(), box.getEastLongitude(),
                 material, carresGeoHash
         );
-
     }
+
+
 
     public void setGeoHash(@NotNull GeoHash geoHash) {
-        this.geoHashPrincipal = geoHash;
-        majCarreGeoHash();
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+
+
+                // Si le point actuellement sélectionné n'est pas dans le geohash,
+                // on l'y remet pour éviter des problèmes plus tard.
+                try {
+                    if(locPrincipaleCoords2d == null || !geoHash.contains(new WGS84Point(
+                            getLocPrincipaleCoords2d().getX(),
+                            getLocPrincipaleCoords2d().getY())
+                    )) {
+                        WGS84Point coord2d = geoHash.getBoundingBoxCenter();
+                        setLocPrincipale(coord2d.getLatitude(), coord2d.getLongitude());
+                    }
+                } catch (NullLocalisationPrincipale ignored) {}
+
+                // On actualise aussi la précision du GeoHash
+                nombreDeBitsGeoH = geoHash.significantBits();
+
+                // On met ensuite le GeoHash à jour sur le globe
+                majCarreGeoHash();
+
+            }
+        });
     }
 
 
-
-
+    public GeoHash getGeoHash() {
+        return GeoHash.withBitPrecision(locPrincipaleCoords2d.getX(), locPrincipaleCoords2d.getY(), getNombreDeBits());
+    }
 
     private void afficherAxesDEBUG() {
         Line ligneRouge = new Line(0, 0, 4, 0);

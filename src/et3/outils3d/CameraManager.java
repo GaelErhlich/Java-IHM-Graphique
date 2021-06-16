@@ -88,7 +88,7 @@ public class CameraManager {
                 if (me.isControlDown()) {
                     modifier = CONTROL_MULTIPLIER;
                 }
-                if (me.isShiftDown()) {
+                if (me.isAltDown()) {
                     modifier = SHIFT_MULTIPLIER;
                 }
                 if (me.isPrimaryButtonDown()) {
@@ -103,18 +103,21 @@ public class CameraManager {
         mainRoot.setOnScroll(new EventHandler<ScrollEvent>() {
             @Override
             public void handle(ScrollEvent event) {
-                double modifier = 1.0;
+                if(!event.isShiftDown()) {
 
-                if (event.isControlDown()) {
-                    modifier = CONTROL_MULTIPLIER;
+                    double modifier = 1.0;
+
+                    if (event.isControlDown()) {
+                        modifier = CONTROL_MULTIPLIER;
+                    }
+                    if (event.isAltDown()) {
+                        modifier = SHIFT_MULTIPLIER;
+                    }
+                    double z = camera.getTranslateZ();
+                    double newZ = z + event.getDeltaY() * MOUSE_SPEED * modifier;
+                    if (newZ > CAMERA_MIN_DISTANCE) newZ = CAMERA_MIN_DISTANCE;
+                    camera.setTranslateZ(newZ);
                 }
-                if (event.isShiftDown()) {
-                    modifier = SHIFT_MULTIPLIER;
-                }
-                double z = camera.getTranslateZ();
-                double newZ = z + event.getDeltaY() * MOUSE_SPEED * modifier;
-                if (newZ > CAMERA_MIN_DISTANCE) newZ = CAMERA_MIN_DISTANCE;
-                camera.setTranslateZ(newZ);
             }
         });
     }

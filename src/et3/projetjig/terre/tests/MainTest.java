@@ -4,6 +4,11 @@ import et3.projetjig.terre.CadreTerre;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import kungfoo.geohash.src.main.java.ch.hsr.geohash.GeoHash;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class MainTest extends Application {
 
@@ -19,6 +24,11 @@ public class MainTest extends Application {
         primaryStage.show();
 
 
+        ScheduledExecutorService scheduleServ = Executors.newSingleThreadScheduledExecutor();
+        scheduleServ.schedule(() -> {
+            System.out.println("3 secondes se sont écoulées !");
+            cadreTerre.recoitGeoHash(GeoHash.fromBinaryString("11101"));
+        }, 3, TimeUnit.SECONDS);
 
 
     }
