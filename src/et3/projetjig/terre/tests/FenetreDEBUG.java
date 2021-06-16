@@ -18,8 +18,9 @@ class FenetreDEBUG implements FenetreInterface {
     }
 
     @Override
-    public void recoitGeoHashParUser(GeoHash geoHash) {
+    public boolean recoitGeoHashParUser(GeoHash geoHash) {
         System.out.println("[FenetreDEBUG] L'utilisateur a défini un nouveau GeoHash : "+geoHash.toString());
-        cadreTerre.recoitGeoHash(geoHash);
+        //cadreTerre.recoitGeoHash(geoHash);
+        return true;
     }
 }

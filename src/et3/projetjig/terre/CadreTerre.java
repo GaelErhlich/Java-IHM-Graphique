@@ -104,8 +104,8 @@ public class CadreTerre extends Pane implements CadreTerreInterface {
      * Notifie la fenêtre qu'un nouveau GeoHash a été demandé par l'utilisateur
      * @param geoHash le Geohash qui va être envoyé à la fenêtre
      */
-    void envoiNouvGeoHashVersFenetre(GeoHash geoHash) {
-        fenetre.recoitGeoHashParUser(geoHash);
+    boolean envoiNouvGeoHashVersFenetre(GeoHash geoHash) {
+        return fenetre.recoitGeoHashParUser(geoHash);
     }
 
 
