@@ -2,7 +2,6 @@ package et3.projetjig.terre.sphereterre;
 
 import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
-import com.sun.istack.internal.NotNull;
 import et3.maths.CoordonneesConvert;
 import et3.projetjig.terre.sphereterre.exceptions.NullLocalisationPrincipale;
 import javafx.application.Platform;
@@ -218,7 +217,7 @@ public class SphereTerre extends Group {
 
 
 
-    public void setGeoHash(@NotNull GeoHash geoHash) {
+    public void setGeoHash(GeoHash geoHash) {
 
         Platform.runLater(new Runnable() {
             @Override
@@ -257,9 +256,6 @@ public class SphereTerre extends Group {
     public void recoitHistogramme() {
 
     }
-
-
-    // TODO Réception des données
 
 
 
