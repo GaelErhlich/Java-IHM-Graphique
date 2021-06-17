@@ -30,10 +30,11 @@ public class SphereTerre extends Group {
     public final static double TEXTURE_LON_OFFSET = -2.8;
 
 
-    private Group carres = new Group();
-    private Group carresGeoHash = new Group();
-    private Group localisations = new Group();
-    private Group localisationPrincipale = new Group();
+    private final Group carres = new Group();
+    private final Group carresGeoHash = new Group();
+    private final Group localisations = new Group();
+    private final Group localisationPrincipale = new Group();
+    private final Group histogramme = new Group();
 
     private Point2D locPrincipaleCoords2d = new Point2D(48.7093, 2.1710);
     private int nombreDeBitsGeoH = 15;
@@ -59,6 +60,7 @@ public class SphereTerre extends Group {
         this.getChildren().add(carresGeoHash);
         this.getChildren().add(localisationPrincipale);
         this.getChildren().add(localisations);
+        this.getChildren().add(histogramme);
 
         // On affiche la localisation principale et le geohash
         setLocPrincipale(locPrincipaleCoords2d);
@@ -249,6 +251,30 @@ public class SphereTerre extends Group {
     public GeoHash getGeoHash() {
         return GeoHash.withBitPrecision(locPrincipaleCoords2d.getX(), locPrincipaleCoords2d.getY(), getNombreDeBits());
     }
+
+
+    // TODO màj de l'histogramme à partir d'un tableau de données
+    public void recoitHistogramme() {
+
+    }
+
+
+    // TODO Réception des données
+
+
+
+    public void desactiverHistogramme() {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                histogramme.getChildren().clear();
+            }
+        });
+    }
+
+
+
+
 
     private void afficherAxesDEBUG() {
         Line ligneRouge = new Line(0, 0, 4, 0);

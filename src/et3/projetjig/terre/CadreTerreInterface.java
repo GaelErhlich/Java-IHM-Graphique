@@ -11,4 +11,7 @@ public interface CadreTerreInterface {
      */
     public void recoitGeoHash(GeoHash geoHash);
 
+
+    //public void setModeHistogramme(boolean onOrOff);
+
 }

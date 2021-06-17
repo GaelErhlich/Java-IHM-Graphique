@@ -53,11 +53,7 @@ public class CoordonneesConvert {
                                             double TEXTURE_LAT_OFFSET, double TEXTURE_LON_OFFSET) {
 
         // On positionne le centre de la sphère (virtuelle) en (0,0,0)
-        coord3d = new Point3D(
-                coord3d.getX()-centre.getX(),
-                coord3d.getY()-centre.getY(),
-                coord3d.getZ()-centre.getZ()
-        ).normalize();
+        coord3d = projPoint3dSurSphere(coord3d, centre, 1);
 
 
         // Calcul de la longitude
