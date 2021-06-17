@@ -11,7 +11,20 @@ public class CarreGrid {
     this.occurences = occurences;
   }
 
-  GeoHash geohash;
-  int taxonId;
-  int occurences;
+  private GeoHash geohash;
+  private int taxonId;
+
+  public GeoHash getGeohash() {
+    return geohash;
+  }
+
+  public int getTaxonId() {
+    return taxonId;
+  }
+
+  public int getOccurences() {
+    return occurences;
+  }
+
+  private int occurences;
 }
