@@ -9,6 +9,6 @@ public interface CadreTerreInterface {
      * Reçoit un nouveau GeoHash de l'extérieur du cadre de la Terre
      * @param geoHash Le nouveau GeoHash reçu, qu'on va appliquer à la planète
      */
-    public void recoitGeoHash(GeoHash geoHash);
+    public void recoitGeoHashParInterface(GeoHash geoHash);
 
 }
