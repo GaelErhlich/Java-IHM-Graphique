@@ -115,7 +115,7 @@ public class CadreTerre extends Pane implements CadreTerreInterface {
     }
 
     @Override
-    public void recoitGeoHashParInterface(GeoHash geoHash) {
+    public void recoitGeoHash(GeoHash geoHash) {
         sphereTerre.setGeoHash(geoHash);
     }
 }
