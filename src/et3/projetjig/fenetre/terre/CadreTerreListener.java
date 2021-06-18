@@ -1,4 +1,4 @@
-package et3.projetjig.terre;
+package et3.projetjig.fenetre.terre;
 
 import kungfoo.geohash.src.main.java.ch.hsr.geohash.GeoHash;
 

@@ -2,8 +2,8 @@ package et3.projetjig.fenetre;
 
 import et3.projetjig.fenetre.annees.AnneesSelecteur;
 import et3.projetjig.fenetre.annees.AnneesSelecteurListener;
-import et3.projetjig.terre.CadreTerre;
-import et3.projetjig.terre.CadreTerreListener;
+import et3.projetjig.fenetre.terre.CadreTerre;
+import et3.projetjig.fenetre.terre.CadreTerreListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -12,7 +12,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import kungfoo.geohash.src.main.java.ch.hsr.geohash.GeoHash;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 

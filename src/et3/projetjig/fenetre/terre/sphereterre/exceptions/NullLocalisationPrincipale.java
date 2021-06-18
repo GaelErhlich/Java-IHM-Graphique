@@ -1,6 +1,6 @@
-package et3.projetjig.terre.sphereterre.exceptions;
+package et3.projetjig.fenetre.terre.sphereterre.exceptions;
 
-import et3.projetjig.terre.sphereterre.SphereTerre;
+import et3.projetjig.fenetre.terre.sphereterre.SphereTerre;
 
 public class NullLocalisationPrincipale extends Exception {
 

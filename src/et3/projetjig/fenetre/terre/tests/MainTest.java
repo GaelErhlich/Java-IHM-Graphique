@@ -1,6 +1,6 @@
-package et3.projetjig.terre.tests;
+package et3.projetjig.fenetre.terre.tests;
 
-import et3.projetjig.terre.CadreTerre;
+import et3.projetjig.fenetre.terre.CadreTerre;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;

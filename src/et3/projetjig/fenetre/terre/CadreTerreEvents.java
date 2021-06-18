@@ -1,8 +1,8 @@
-package et3.projetjig.terre;
+package et3.projetjig.fenetre.terre;
 
 import et3.maths.CoordonneesConvert;
-import et3.projetjig.terre.sphereterre.SphereTerre;
-import et3.projetjig.terre.sphereterre.exceptions.NullLocalisationPrincipale;
+import et3.projetjig.fenetre.terre.sphereterre.SphereTerre;
+import et3.projetjig.fenetre.terre.sphereterre.exceptions.NullLocalisationPrincipale;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;

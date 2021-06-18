@@ -1,7 +1,7 @@
-package et3.projetjig.terre;
+package et3.projetjig.fenetre.terre;
 
 import et3.outils3d.CameraManager;
-import et3.projetjig.terre.sphereterre.SphereTerre;
+import et3.projetjig.fenetre.terre.sphereterre.SphereTerre;
 import javafx.scene.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;

@@ -1,9 +1,9 @@
-package et3.projetjig.terre.sphereterre;
+package et3.projetjig.fenetre.terre.sphereterre;
 
 import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import et3.maths.CoordonneesConvert;
-import et3.projetjig.terre.sphereterre.exceptions.NullLocalisationPrincipale;
+import et3.projetjig.fenetre.terre.sphereterre.exceptions.NullLocalisationPrincipale;
 import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
