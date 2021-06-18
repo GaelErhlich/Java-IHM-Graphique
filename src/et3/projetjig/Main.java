@@ -1,5 +1,8 @@
 package et3.projetjig;
 
+import et3.projetjig.fenetre.ControllerFenetre;
+import et3.projetjig.terre.CadreTerre;
+import et3.projetjig.terre.sphereterre.SphereTerre;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,9 +17,17 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         try {
-            Parent content = FXMLLoader.load( getClass().getResource("fenetre/fenetre.fxml") );
+            ControllerFenetre fenetre = new ControllerFenetre();
+            CadreTerre paneTerre = new CadreTerre(500,500, fenetre);
+
+
+            FXMLLoader loader = new FXMLLoader( getClass().getResource("fenetre/fenetre.fxml") );
+            loader.setController(fenetre);
+            Parent root = loader.load();
+
             primaryStage.setTitle("Projet OBIS");
-            primaryStage.setScene( new Scene(content) );
+            primaryStage.setScene( new Scene(root));
+            primaryStage.setResizable(false);
             primaryStage.show();
 
         } catch (IOException e) {
@@ -25,7 +36,7 @@ public class Main extends Application {
     }
 
 
-    public void main(String args[]) {
+    public static void main(String[] args) {
         launch(args);
     }
 }

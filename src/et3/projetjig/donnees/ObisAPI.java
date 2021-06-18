@@ -1,3 +1,4 @@
+/*
 package et3.projetjig.donnees;
 
 import et3.jsonReader.JsonReader;
@@ -30,7 +31,6 @@ public class ObisAPI implements DonneesInterface {
       JSONArray coords = o.getJSONObject("geometry").getJSONArray("coordinates").getJSONArray(0);
       JSONArray nw = coords.getJSONArray(1);
       JSONArray se = coords.getJSONArray(3);
-      if(box.getNorthWestCorner().getLatitude())
     }
     return null;
   }
@@ -53,3 +53,4 @@ public class ObisAPI implements DonneesInterface {
     return null;
   }
 }
+*/

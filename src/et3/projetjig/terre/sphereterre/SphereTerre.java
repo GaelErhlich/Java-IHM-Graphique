@@ -36,7 +36,7 @@ public class SphereTerre extends Group {
     private final Group histogramme = new Group();
 
     private Point2D locPrincipaleCoords2d = new Point2D(48.7093, 2.1710);
-    private int nombreDeBitsGeoH = 15;
+    private int nombreDeBitsGeoH = 10;
 
 
     public SphereTerre() {
