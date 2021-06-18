@@ -24,7 +24,7 @@
                   </HBox>
                   <HBox AnchorPane.leftAnchor="80.0">
                      <children>
-                        <Button mnemonicParsing="false" text="Animer" />
+                        <Button fx:id="animerBtn" mnemonicParsing="false" text="Animer ( - )" />
                      </children>
                   </HBox>
                </children>

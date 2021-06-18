@@ -26,15 +26,18 @@ public class AnneesSelecteur extends Pane implements Initializable {
     short anneeFin;
 
 
-    public AnneesSelecteur(AnneesSelecteurListener parent, short anneeDebut, short anneeFin) throws IOException {
+    public AnneesSelecteur(AnneesSelecteurListener parent, short anneeDebut, short anneeFin) {
         this.parent = parent;
         this.anneeDebut = anneeDebut;
         this.anneeFin = anneeFin;
 
-        FXMLLoader loader = new FXMLLoader( getClass().getResource("anneesSelecteur.fxml") );
-        loader.setController(this);
-        Parent root = loader.load();
-        this.getChildren().add(root);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("anneesSelecteur.fxml"));
+            loader.setController(this);
+            Parent root = loader.load();
+            this.getChildren().add(root);
+        }
+        catch (IOException e) { e.printStackTrace(); }
     }
 
 
@@ -50,24 +53,29 @@ public class AnneesSelecteur extends Pane implements Initializable {
         // Initialisation des valeurs des sliders
         setDebut(anneeFin);
         setFin(anneeFin);
+        parent.recoitAnneesParUser(anneeDebut, anneeFin);
 
 
 
+        // Sélection d'un nouveau début
         debutSlider.valueProperty().addListener( (ObservableValue<? extends Number> observableValue, Number number, Number t1) -> {
             debutSlider.setValue( Math.min(t1.doubleValue(), finSlider.getValue()) );
-            this.anneeDebut = (short)debutSlider.getValue();
-            debutLabel.setText("Début : "+anneeDebut);
+            setDebut( (short)debutSlider.getValue() );
+            parent.recoitAnneesParUser(anneeDebut, anneeFin);
         });
 
+        // Sélection d'une nouvelle fin
         finSlider.valueProperty().addListener( (ObservableValue<? extends Number> observableValue, Number number, Number t1) -> {
             finSlider.setValue( Math.max(t1.doubleValue(), debutSlider.getValue()) );
-            this.anneeFin = (short)finSlider.getValue();
-            finLabel.setText("Fin : "+anneeFin);
+            setFin( (short)finSlider.getValue() );
+            parent.recoitAnneesParUser(anneeDebut, anneeFin);
         });
     }
 
     public void setDebut(short annee) {
+        this.anneeDebut = annee;
         debutSlider.setValue(annee);
+        debutLabel.setText("Début : "+annee);
     }
     public short getDebut() {
         return (short)debutSlider.getValue();
@@ -75,7 +83,9 @@ public class AnneesSelecteur extends Pane implements Initializable {
 
 
     public void setFin(short annee) {
+        this.anneeFin = annee;
         finSlider.setValue(annee);
+        finLabel.setText("Fin : "+annee);
     }
     public short getFin() {
         return (short)finSlider.getValue();
