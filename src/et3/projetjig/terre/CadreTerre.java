@@ -1,7 +1,6 @@
 package et3.projetjig.terre;
 
 import et3.outils3d.CameraManager;
-import et3.projetjig.fenetre.FenetreInterface;
 import et3.projetjig.terre.sphereterre.SphereTerre;
 import javafx.scene.*;
 import javafx.scene.layout.Pane;
@@ -10,7 +9,7 @@ import kungfoo.geohash.src.main.java.ch.hsr.geohash.GeoHash;
 
 public class CadreTerre extends Pane implements CadreTerreInterface {
 
-    private FenetreInterface fenetre;
+    private CadreTerreListener fenetre;
 
     /**
      * Groupe contenant les Mesh de la Terre
@@ -40,7 +39,7 @@ public class CadreTerre extends Pane implements CadreTerreInterface {
      * @param height la hauteur du Pane 3D
      * @param fenetre Fenêtre à laquelle correspond ce cadre, à laquelle envoyer des informations
      */
-    public CadreTerre(int width, int height, FenetreInterface fenetre) {
+    public CadreTerre(int width, int height, CadreTerreListener fenetre) {
         this.fenetre = fenetre;
 
         this.initialiseFormes(width, height);

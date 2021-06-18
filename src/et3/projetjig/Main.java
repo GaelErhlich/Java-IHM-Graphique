@@ -2,7 +2,6 @@ package et3.projetjig;
 
 import et3.projetjig.fenetre.ControllerFenetre;
 import et3.projetjig.terre.CadreTerre;
-import et3.projetjig.terre.sphereterre.SphereTerre;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

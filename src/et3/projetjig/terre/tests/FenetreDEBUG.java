@@ -1,10 +1,10 @@
 package et3.projetjig.terre.tests;
 
-import et3.projetjig.fenetre.FenetreInterface;
+import et3.projetjig.terre.CadreTerreListener;
 import et3.projetjig.terre.CadreTerre;
 import kungfoo.geohash.src.main.java.ch.hsr.geohash.GeoHash;
 
-class FenetreDEBUG implements FenetreInterface {
+class FenetreDEBUG implements CadreTerreListener {
 
     private CadreTerre cadreTerre;
 
