@@ -1,9 +1,6 @@
 package et3.projetjig;
 
-import et3.projetjig.donnees.types.Occurrence;
-import et3.projetjig.donnees.types.Occurrences;
-import et3.projetjig.donnees.types.OccurrencesPartition;
-import et3.projetjig.donnees.types.Taxon;
+import et3.projetjig.donnees.types.*;
 import et3.projetjig.fenetre.ControllerFenetre;
 import et3.projetjig.fenetre.terre.CadreTerre;
 import javafx.application.Application;
@@ -34,7 +31,7 @@ public class Main extends Application {
             primaryStage.show();
 
             fenetre.recoitEspecesParBDD(new String[] {"Ah", "Beh", "Cè", "Dé"} );
-            Taxon taxon = new Taxon(30, "Geogus", "Règle animal", "Fils de poule");
+            /*Taxon taxon = new Taxon(30, "Geogus", "Règle animal", "Fils de poule");
             fenetre.recoitOccurrencesParBDD(new OccurrencesPartition(
                     taxon,
                     new Occurrences[] {},
@@ -45,6 +42,16 @@ public class Main extends Application {
                     (short)2020
             ));
             fenetre.recoitErreurEspece("Gorgus");
+            fenetre.recoitObservationsParBDD(new Observation[] {
+                    new Observation("Geogus", "Joe", "3ème", "TS1", "Centre National pour la Recherche Scientifique"),
+                    new Observation("Geogus", "Joe", "3ème", "TS1", "Centre National pour la Recherche Scientifique"),
+                    new Observation("Geogus", "Joe", "3ème", "TS1", "Le LRI, et oui !"),
+                    new Observation("John", "Joe", "2.0", "Archéophynes", "Centre National pour la Recherche Scientifique")
+            });
+
+
+
+            // */
 
 
         } catch (IOException e) {
