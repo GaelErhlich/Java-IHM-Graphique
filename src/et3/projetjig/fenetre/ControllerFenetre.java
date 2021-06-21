@@ -1,7 +1,11 @@
 package et3.projetjig.fenetre;
 
+import et3.projetjig.donnees.types.Observation;
+import et3.projetjig.donnees.types.Taxon;
 import et3.projetjig.fenetre.annees.AnneesSelecteur;
 import et3.projetjig.fenetre.annees.AnneesSelecteurListener;
+import et3.projetjig.fenetre.especes.EspecesSelecteur;
+import et3.projetjig.fenetre.especes.EspecesSelecteurListener;
 import et3.projetjig.fenetre.terre.CadreTerre;
 import et3.projetjig.fenetre.terre.CadreTerreListener;
 import javafx.fxml.FXML;
@@ -15,11 +19,14 @@ import kungfoo.geohash.src.main.java.ch.hsr.geohash.GeoHash;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ControllerFenetre implements Initializable, CadreTerreListener, AnneesSelecteurListener {
+public class ControllerFenetre
+        implements Initializable, FenetreInterface,
+        CadreTerreListener, AnneesSelecteurListener, EspecesSelecteurListener {
+
 
     @FXML AnchorPane pane3dAnchor;
     @FXML Pane paneAnnees;
-    @FXML ListView listView; // TODO : Changer en Pane
+    @FXML AnchorPane paneEspeces;
 
 
     @FXML Button animerBtn;
@@ -28,6 +35,7 @@ public class ControllerFenetre implements Initializable, CadreTerreListener, Ann
 
     private CadreTerre terre = null;
     private AnneesSelecteur annees = null;
+    private EspecesSelecteur especes = null;
 
 
     @Override
@@ -40,6 +48,10 @@ public class ControllerFenetre implements Initializable, CadreTerreListener, Ann
         // Mise du sélecteur d'année (composant graphique AnneesSelecteur)
         annees = new AnneesSelecteur(this, (short)1980, (short)2020);
         paneAnnees.getChildren().add(annees);
+
+        // Mise du sélecteur d'espèce
+        especes = new EspecesSelecteur(this, 320, 150);
+        paneEspeces.getChildren().add(especes);
 
 
     }
@@ -63,5 +75,28 @@ public class ControllerFenetre implements Initializable, CadreTerreListener, Ann
     @Override
     public void recoitAnneesParUser(short debutAnnee, short finAnnee) {
         majAnimerBtn(debutAnnee, finAnnee);
+    }
+
+
+    @Override
+    public void recoitEspeceParUser(String nom) {
+        System.out.println("Nouvelle espèce sélectionnée");
+        // TODO : demander les informations sur l'espèce
+
+    }
+
+    @Override
+    public void recoitEspeceParBDD(Taxon espece) {
+        // TODO
+    }
+
+    @Override
+    public void recoitEspecesParBDD(String[] nomsEspeces) {
+        // TODO
+    }
+
+    @Override
+    public void recoitObservationParBDD(Observation obs) {
+        //TODO
     }
 }

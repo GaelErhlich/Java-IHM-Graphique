@@ -24,7 +24,7 @@ public class Main extends Application {
             loader.setController(fenetre);
             Parent root = loader.load();
 
-            primaryStage.setTitle("Projet OBIS");
+            primaryStage.setTitle("Projet OBIS 3D");
             primaryStage.setScene( new Scene(root));
             primaryStage.setResizable(false);
             primaryStage.show();

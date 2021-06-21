@@ -4,6 +4,7 @@ public class Taxon {
     private int id;
     private String nomScientifique;
     private String rang;
+    private String phylum;
 
     public int getId() {
         return id;
@@ -21,7 +22,6 @@ public class Taxon {
         return phylum;
     }
 
-    private String phylum;
 
     public Taxon(int id, String nomScientifique, String rang, String phylum) {
         this.id = id;
