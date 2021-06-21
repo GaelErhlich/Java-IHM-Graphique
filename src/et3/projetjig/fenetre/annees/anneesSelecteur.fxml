@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox layoutY="10.0" spacing="10.0">
+         <children>
+            <VBox>
+               <children>
+                  <Label fx:id="debutLabel" text="Début : -">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Label>
+                  <Slider fx:id="debutSlider" majorTickUnit="10.0" max="2020.0" min="1900.0" minorTickCount="1" showTickLabels="true" snapToTicks="true" value="2020.0" />
+               </children>
+            </VBox>
+            <VBox>
+               <children>
+                  <Label fx:id="finLabel" text="Fin : -">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Label>
+                  <Slider fx:id="finSlider" majorTickUnit="10.0" max="2020.0" min="1900.0" minorTickCount="1" showTickLabels="true" snapToTicks="true" value="2020.0" />
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

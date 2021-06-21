@@ -1,5 +1,7 @@
 package et3.jsonReader;
 
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -13,7 +15,7 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
-import org.json.JSONObject;
+
 
 public class JsonReader {
 

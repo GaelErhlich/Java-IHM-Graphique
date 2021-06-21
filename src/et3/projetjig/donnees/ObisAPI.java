@@ -1,3 +1,4 @@
+/*
 package et3.projetjig.donnees;
 
 import et3.jsonReader.JsonReader;
@@ -130,3 +131,4 @@ public class ObisAPI implements DonneesInterface {
     return null;
   }
 }
+*/

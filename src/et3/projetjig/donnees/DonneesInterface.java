@@ -1,18 +1,18 @@
 package et3.projetjig.donnees;
 
-import et3.projetjig.donnees.types.CarreGrid;
 import et3.projetjig.donnees.types.Observation;
+import et3.projetjig.donnees.types.Occurence;
 import et3.projetjig.donnees.types.Taxon;
 import kungfoo.geohash.src.main.java.ch.hsr.geohash.GeoHash;
 
 public interface DonneesInterface {
-  public CarreGrid getOccurencesGeohash(
+  public Occurence getOccurencesGeohash(
     String nomEspece,
     short precision,
     GeoHash geohash
   );
 
-  public CarreGrid[] getOccurences(String nomEspece, short precision);
+  public Occurence[] getOccurences(String nomEspece, short precision);
 
   public Observation[] getObservations(
     String geohash,
