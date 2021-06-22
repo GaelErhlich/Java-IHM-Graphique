@@ -2,7 +2,6 @@ package et3.projetjig.fenetre;
 
 import et3.projetjig.donnees.types.Observation;
 import et3.projetjig.donnees.types.OccurrencesPartition;
-import et3.projetjig.donnees.types.Taxon;
 import et3.projetjig.fenetre.annees.AnneesSelecteur;
 import et3.projetjig.fenetre.annees.AnneesSelecteurListener;
 import et3.projetjig.fenetre.especes.EspecesSelecteur;
@@ -12,7 +11,6 @@ import et3.projetjig.fenetre.terre.CadreTerreListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -94,7 +92,7 @@ public class ControllerFenetre
         especes.recoitEspece(op.getEspece());
         annees.setDebut(op.getAnneeDebut());
         annees.setFin(op.getAnneeFin());
-        terre.recoitOccurrences(op.getOccurrences(), op.getMin(), op.getMax()); // TODO : TEMPORAIRE
+        terre.recoitOccurrences(op.getOccsGlobales(), op.getMinGlobales(), op.getMaxGlobales()); // TODO : TEMPORAIRE
         // TODO : Afficher sur le globe
         // TODO : Stocker
     }
