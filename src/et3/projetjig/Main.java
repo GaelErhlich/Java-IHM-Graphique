@@ -18,6 +18,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         try {
+
             ControllerFenetre fenetre = new ControllerFenetre();
             CadreTerre paneTerre = new CadreTerre(500,500, fenetre);
 

@@ -11,6 +11,10 @@ import javafx.stage.Stage;
 import kungfoo.geohash.src.main.java.ch.hsr.geohash.GeoHash;
 
 import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 public class MainTest extends Application {
 

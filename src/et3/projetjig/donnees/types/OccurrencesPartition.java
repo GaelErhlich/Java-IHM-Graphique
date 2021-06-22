@@ -99,6 +99,16 @@ public class OccurrencesPartition {
     return occGlobales.getAnneeFin();
   }
 
+
+  /**
+   * Donne les occurrences dans l'intervalle de temps (partitionné) actuellement sélectionné
+   * @return un object Occurrences contenant les occurrences sur la partition en temps actuelle
+   */
+  public Occurrences actuelle() {
+    return occurrences[iCourant];
+  }
+
+
   /**
    * Donne les occurrences dans l'intervalle de temps (partitionné) suivant celui donné au
    * dernier appel de la fonction. On commence au premier intervalle et on revient au début
@@ -118,4 +128,17 @@ public class OccurrencesPartition {
   public boolean estDernier() {
     return iCourant+1 == occurrences.length;
   }
+
+
+  /**
+   * Réinitialise l'indice pour que les Occurrences actuelles soient celles du tout
+   * premier intervalle
+   * @return la premières Occurrences
+   */
+  public Occurrences mettreDebut() {
+    iCourant = 0;
+    return actuelle();
+  }
+
+
 }

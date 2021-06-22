@@ -23,7 +23,8 @@
                   </HBox>
                   <HBox AnchorPane.leftAnchor="80.0">
                      <children>
-                        <Button fx:id="animerBtn" mnemonicParsing="false" text="Animer ( - )" />
+                        <Button fx:id="lireBtn" mnemonicParsing="false" text="Lire évolution occurrences ( - )" />
+                        <Button fx:id="globalBtn" mnemonicParsing="false" text="Global" />
                      </children>
                   </HBox>
                </children>
