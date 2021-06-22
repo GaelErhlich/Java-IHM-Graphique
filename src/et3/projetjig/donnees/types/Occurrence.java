@@ -5,19 +5,19 @@ import kungfoo.geohash.src.main.java.ch.hsr.geohash.GeoHash;
 public class Occurrence {
 
   private GeoHash geohash;
-  private int occurrences;
+  private int nbOccurrences;
 
-  public Occurrence(GeoHash geohash, int occurrences) {
+  public Occurrence(GeoHash geohash, int nbOccurrences) {
     this.geohash = geohash;
-    this.occurrences = occurrences;
+    this.nbOccurrences = nbOccurrences;
   }
 
   public GeoHash getGeohash() {
     return geohash;
   }
 
-  public int getOccurrences() {
-    return occurrences;
+  public int getNombreOccu() {
+    return nbOccurrences;
   }
 
 }

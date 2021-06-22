@@ -35,7 +35,7 @@ public class SphereTerre extends Group {
     private final Group localisationPrincipale = new Group();
     private final Group histogramme = new Group();
 
-    private Point2D locPrincipaleCoords2d = new Point2D(48.7093, 2.1710);
+    private Point2D locPrincipaleCoords2d = null; //new Point2D(48.7093, 2.1710); // MDI
     private int nombreDeBitsGeoH = 10;
 
 
@@ -62,8 +62,8 @@ public class SphereTerre extends Group {
         this.getChildren().add(histogramme);
 
         // On affiche la localisation principale et le geohash
-        setLocPrincipale(locPrincipaleCoords2d);
-        majCarreGeoHash();
+        /*setLocPrincipale(locPrincipaleCoords2d);
+        majCarreGeoHash();*/
 
 
     }

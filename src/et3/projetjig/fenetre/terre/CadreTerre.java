@@ -4,6 +4,7 @@ import et3.outils3d.CameraManager;
 import et3.projetjig.donnees.types.Occurrence;
 import et3.projetjig.donnees.types.Occurrences;
 import et3.projetjig.fenetre.terre.sphereterre.SphereTerre;
+import javafx.application.Platform;
 import javafx.scene.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -105,6 +106,20 @@ public class CadreTerre extends Pane {
         }
     }
 
+
+    private static Color couleurEchellePourNiveau(short niveau) {
+        return new Color(1.0 - niveau*0.125, niveau*0.125, 0.0, 0.1);
+    }
+
+    private static short niveauEchellePourValeur(int valeur, int min, int max, Float tailleIntervalle) {
+        short niveau = (short)( (valeur - min) / tailleIntervalle);
+        niveau = (short) Math.min(Math.max(niveau, 0),NOMBRE_INTERVALLES-1);
+        return niveau;
+    }
+
+
+
+
     /**
      * Notifie la fenêtre qu'un nouveau GeoHash a été demandé par l'utilisateur
      * @param geoHash le Geohash qui va être envoyé à la fenêtre
@@ -128,14 +143,17 @@ public class CadreTerre extends Pane {
 
 
     public void recoitOccurrences(Occurrences occurrences, int min, int max) {
-        float tailleInterv = ((float)(max - min)) / NOMBRE_INTERVALLES;
+        Platform.runLater(()->{
 
-        for(Occurrence occ : occurrences.getOccurrences()) {
-            short niveau = (short)( (occ.getOccurrences() - min) / tailleInterv);
-            niveau = (short) Math.min(Math.max(niveau, 0),NOMBRE_INTERVALLES-1);
-            Color color = new Color(1.0 - niveau*0.125, niveau*0.125, 0.0, 0.1);
-            sphereTerre.ajouterGeoHash(occ.getGeohash(), color);
-        }
-        // TODO
+            sphereTerre.supprimeCarres();
+
+            float tailleInterv = ((float)(max - min)) / NOMBRE_INTERVALLES;
+
+            for(Occurrence occ : occurrences.getOccurrences()) {
+                short niveau = niveauEchellePourValeur(occ.getNombreOccu(), min, max, tailleInterv);
+                sphereTerre.ajouterGeoHash(occ.getGeohash(), couleurEchellePourNiveau(niveau));
+            }
+        });
+
     }
 }
