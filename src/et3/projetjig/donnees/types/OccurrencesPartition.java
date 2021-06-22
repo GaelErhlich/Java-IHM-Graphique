@@ -58,11 +58,11 @@ public class OccurrencesPartition {
   }
 
   public Occurrences suivant() {
-    iCourant = (iCourant+1) % (INTERVALLE_ANNEES-1);
+    iCourant = (iCourant+1) % (occurrences.length);
     return occurrences[iCourant];
   }
 
   public boolean estDernier() {
-    return true;
+    return iCourant+1 == occurrences.length;
   }
 }
