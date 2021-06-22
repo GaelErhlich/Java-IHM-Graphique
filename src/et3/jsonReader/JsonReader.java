@@ -1,7 +1,5 @@
 package et3.jsonReader;
 
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -15,11 +13,12 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
-
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class JsonReader {
 
-  public static JSONObject readJsonFromUrl(String url) {
+  public static JSONObject readJsonObjectFromUrl(String url) {
     String json = "";
 
     HttpClient client = HttpClient
@@ -48,6 +47,37 @@ public class JsonReader {
     }
 
     return new JSONObject(json);
+  }
+
+  public static JSONArray readJsonArrayFromUrl(String url) {
+    String json = "";
+
+    HttpClient client = HttpClient
+      .newBuilder()
+      .version(Version.HTTP_1_1)
+      .followRedirects(Redirect.NORMAL)
+      .connectTimeout(Duration.ofSeconds(20))
+      .build();
+
+    HttpRequest request = HttpRequest
+      .newBuilder()
+      .uri(URI.create(url))
+      .timeout(Duration.ofMinutes(2))
+      .header("Content-Type", "application/json")
+      .GET()
+      .build();
+
+    try {
+      json =
+        client
+          .sendAsync(request, BodyHandlers.ofString())
+          .thenApply(HttpResponse::body)
+          .get(10, TimeUnit.SECONDS);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    return new JSONArray(json);
   }
 
   public static JSONObject readFromFile(String path) {
