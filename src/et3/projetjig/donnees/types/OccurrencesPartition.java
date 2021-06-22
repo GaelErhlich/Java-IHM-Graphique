@@ -1,6 +1,10 @@
 package et3.projetjig.donnees.types;
 
+import et3.projetjig.donnees.types.exceptions.AuMoins1InteveralleException;
+
 public class OccurrencesPartition {
+
+  private final short INTERVALLE_ANNEES = 5;
 
   private Taxon espece;
   private Occurrences[] occurrences;
@@ -10,8 +14,16 @@ public class OccurrencesPartition {
   private short anneeDebut;
   private short anneeFin;
 
+  private int iCourant = 0;
 
-  public OccurrencesPartition(Taxon espece, Occurrences[] occurrences, Occurrences occGlobales, int minOccurrences, int maxOccurrences, short anneeDebut, short anneeFin) {
+  public OccurrencesPartition(Taxon espece, Occurrences[] occurrences, Occurrences occGlobales,
+                              int minOccurrences, int maxOccurrences, short anneeDebut, short anneeFin)
+              throws AuMoins1InteveralleException {
+
+    if(occurrences == null || occurrences.length == 0) {
+      throw new AuMoins1InteveralleException(this);
+    }
+
     this.espece = espece;
     this.occurrences = occurrences;
     this.occGlobales = occGlobales;
@@ -45,8 +57,9 @@ public class OccurrencesPartition {
     return anneeFin;
   }
 
-  public Occurrence[] suivant() {
-    return null;
+  public Occurrences suivant() {
+    iCourant = (iCourant+1) % (INTERVALLE_ANNEES-1);
+    return occurrences[iCourant];
   }
 
   public boolean estDernier() {

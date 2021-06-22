@@ -65,7 +65,7 @@ public class MainTest extends Application {
             // */
 
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
