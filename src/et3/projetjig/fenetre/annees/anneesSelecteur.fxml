@@ -17,7 +17,7 @@
                         <Font size="10.0" />
                      </font>
                   </Label>
-                  <Slider fx:id="debutSlider" majorTickUnit="10.0" max="2020.0" min="1900.0" minorTickCount="1" showTickLabels="true" snapToTicks="true" value="2020.0" />
+                  <Slider fx:id="debutSlider" majorTickUnit="10.0" max="2020.0" min="1900.0" minorTickCount="1" showTickLabels="true" value="2020.0" />
                </children>
             </VBox>
             <VBox>
@@ -27,7 +27,7 @@
                         <Font size="10.0" />
                      </font>
                   </Label>
-                  <Slider fx:id="finSlider" majorTickUnit="10.0" max="2020.0" min="1900.0" minorTickCount="1" showTickLabels="true" snapToTicks="true" value="2020.0" />
+                  <Slider fx:id="finSlider" majorTickUnit="10.0" max="2020.0" min="1900.0" minorTickCount="1" showTickLabels="true" value="2020.0" />
                </children>
             </VBox>
          </children>

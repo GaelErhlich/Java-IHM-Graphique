@@ -3,7 +3,6 @@ package et3.projetjig.fenetre.terre;
 import et3.maths.CoordonneesConvert;
 import et3.projetjig.fenetre.terre.sphereterre.SphereTerre;
 import et3.projetjig.fenetre.terre.sphereterre.exceptions.NullLocalisationPrincipale;
-import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.input.MouseEvent;
@@ -58,21 +57,19 @@ public class CadreTerreEvents {
     private static void initialiseEventsMolette(CadreTerre cadreTerre) {
         SphereTerre terre = cadreTerre.getSphereTerre();
 
-        cadreTerre.addEventHandler(ScrollEvent.SCROLL, new EventHandler<ScrollEvent>() {
-            @Override
-            public void handle(ScrollEvent event) {
-                if(event.isShiftDown()) {
-                    try {
-                        int nombreDeBits = terre.getNombreDeBits() + (int)(event.getDeltaX()/30);
-                        Point2D latEtLon = terre.getLocPrincipaleCoords2d();
-                        GeoHash nouvGeoHash = GeoHash.withBitPrecision(latEtLon.getX(), latEtLon.getY(), nombreDeBits);
+        cadreTerre.addEventHandler(ScrollEvent.SCROLL, event -> {
+            if(event.isShiftDown()) {
+                try {
+                    int nombreDeBits = terre.getNombreDeBits() + (int)(event.getDeltaX()/30);
+                    nombreDeBits = Math.min(Math.max(nombreDeBits, 0),64);
+                    Point2D latEtLon = terre.getLocPrincipaleCoords2d();
+                    GeoHash nouvGeoHash = GeoHash.withBitPrecision(latEtLon.getX(), latEtLon.getY(), nombreDeBits);
 
-                        if(cadreTerre.envoiNouvGeoHashVersFenetre(nouvGeoHash)) {
-                            terre.setGeoHash(nouvGeoHash);
-                        }
+                    if(cadreTerre.envoiNouvGeoHashVersFenetre(nouvGeoHash)) {
+                        terre.setGeoHash(nouvGeoHash);
                     }
-                    catch(NullLocalisationPrincipale igonored) {}
                 }
+                catch(NullLocalisationPrincipale ignored) {}
             }
         });
     }

@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class MainTest extends Application {
+class MainTest extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {

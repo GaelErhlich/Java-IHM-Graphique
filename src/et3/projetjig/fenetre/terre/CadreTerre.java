@@ -1,15 +1,22 @@
 package et3.projetjig.fenetre.terre;
 
 import et3.outils3d.CameraManager;
+import et3.projetjig.donnees.types.Occurrence;
+import et3.projetjig.donnees.types.Occurrences;
 import et3.projetjig.fenetre.terre.sphereterre.SphereTerre;
+import javafx.application.Platform;
 import javafx.scene.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import kungfoo.geohash.src.main.java.ch.hsr.geohash.GeoHash;
 
-public class CadreTerre extends Pane implements CadreTerreInterface {
+public class CadreTerre extends Pane {
 
-    private CadreTerreListener fenetre;
+    public static short NOMBRE_INTERVALLES = 8;
+
+
+
+    private final CadreTerreListener fenetre;
 
     /**
      * Groupe contenant les Mesh de la Terre
@@ -99,6 +106,20 @@ public class CadreTerre extends Pane implements CadreTerreInterface {
         }
     }
 
+
+    private static Color couleurEchellePourNiveau(short niveau) {
+        return new Color(1.0 - niveau*0.125, niveau*0.125, 0.0, 0.1);
+    }
+
+    private static short niveauEchellePourValeur(int valeur, int min, int max, Float tailleIntervalle) {
+        short niveau = (short)( (valeur - min) / tailleIntervalle);
+        niveau = (short) Math.min(Math.max(niveau, 0),NOMBRE_INTERVALLES-1);
+        return niveau;
+    }
+
+
+
+
     /**
      * Notifie la fenêtre qu'un nouveau GeoHash a été demandé par l'utilisateur
      * @param geoHash le Geohash qui va être envoyé à la fenêtre
@@ -113,8 +134,26 @@ public class CadreTerre extends Pane implements CadreTerreInterface {
         return sphereTerre;
     }
 
-    @Override
+
     public void recoitGeoHash(GeoHash geoHash) {
         sphereTerre.setGeoHash(geoHash);
+    }
+
+
+
+
+    public void recoitOccurrences(Occurrences occurrences, int min, int max) {
+        Platform.runLater(()->{
+
+            sphereTerre.supprimeCarres();
+
+            float tailleInterv = ((float)(max - min)) / NOMBRE_INTERVALLES;
+
+            for(Occurrence occ : occurrences.getOccurrences()) {
+                short niveau = niveauEchellePourValeur(occ.getNombreOccu(), min, max, tailleInterv);
+                sphereTerre.ajouterGeoHash(occ.getGeohash(), couleurEchellePourNiveau(niveau));
+            }
+        });
+
     }
 }
