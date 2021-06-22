@@ -11,6 +11,10 @@ import javafx.stage.Stage;
 import kungfoo.geohash.src.main.java.ch.hsr.geohash.GeoHash;
 
 import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 public class MainTest extends Application {
 
@@ -96,10 +100,23 @@ public class MainTest extends Application {
             // */
 
 
+            ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+            future = service.scheduleAtFixedRate(()->{
+                System.out.println("AH : "+k);
+                k++;
+                if(k == 10) {
+                    future.cancel(false);
+                }
+
+            }, 1,1, TimeUnit.SECONDS);
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+    private int k = 0;
+    ScheduledFuture future;
 
 
     public static void main(String[] args) {
