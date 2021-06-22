@@ -39,20 +39,35 @@ public class MainTest extends Application {
                             new Occurrences(taxon, new Occurrence[] {
                                     new Occurrence(GeoHash.fromGeohashString("sp"), 12),
                                     new Occurrence(GeoHash.fromGeohashString("sq"), 65),
-                                    new Occurrence(GeoHash.fromGeohashString("sr"), 10),
+                                    new Occurrence(GeoHash.fromGeohashString("sr"), 17),
                                     new Occurrence(GeoHash.fromGeohashString("ss"), 150),
                                     new Occurrence(GeoHash.fromGeohashString("st"), 47),
-                                    new Occurrence(GeoHash.fromGeohashString("su"), 98),
-                                    new Occurrence(GeoHash.fromGeohashString("sv"), 15),
-                                    new Occurrence(GeoHash.fromGeohashString("sw"), 30),
+                                    new Occurrence(GeoHash.fromGeohashString("su"), 78),
+                                    new Occurrence(GeoHash.fromGeohashString("sv"), 150),
+                                    new Occurrence(GeoHash.fromGeohashString("sw"), 43),
                                     new Occurrence(GeoHash.fromGeohashString("rs"), 47),
-                            }, 10, 40, (short)2009, (short)2013),
+                            }, 12, 150, (short)2009, (short)2013),
                             new Occurrences(taxon, new Occurrence[] {
+                                    new Occurrence(GeoHash.fromGeohashString("sp"), 18),
+                                    new Occurrence(GeoHash.fromGeohashString("sq"), 156),
+                                    new Occurrence(GeoHash.fromGeohashString("sr"), 10),
+                                    new Occurrence(GeoHash.fromGeohashString("ss"), 123),
+                                    new Occurrence(GeoHash.fromGeohashString("st"), 58),
+                                    new Occurrence(GeoHash.fromGeohashString("su"), 78),
+                                    new Occurrence(GeoHash.fromGeohashString("sv"), 150),
+                                    new Occurrence(GeoHash.fromGeohashString("sw"), 46),
+                                    new Occurrence(GeoHash.fromGeohashString("rs"), 89),
 
-                            }, 10, 40, (short)2014, (short)2018),
+                            }, 10, 150, (short)2014, (short)2018),
                             new Occurrences(taxon, new Occurrence[] {
+                                    new Occurrence(GeoHash.fromGeohashString("sp"), 89),
+                                    new Occurrence(GeoHash.fromGeohashString("ss"), 89),
+                                    new Occurrence(GeoHash.fromGeohashString("su"), 146),
+                                    new Occurrence(GeoHash.fromGeohashString("sv"), 110),
+                                    new Occurrence(GeoHash.fromGeohashString("sw"), 80),
+                                    new Occurrence(GeoHash.fromGeohashString("rs"), 23),
 
-                            }, 10, 40, (short)2019, (short)2020),
+                            }, 19, 146, (short)2019, (short)2020),
                     },
                     new Occurrences(taxon, new Occurrence[] {
                             new Occurrence(GeoHash.fromGeohashString("sp"), 30),
@@ -64,7 +79,7 @@ public class MainTest extends Application {
                             new Occurrence(GeoHash.fromGeohashString("sv"), 15),
                             new Occurrence(GeoHash.fromGeohashString("sw"), 30),
                             new Occurrence(GeoHash.fromGeohashString("rs"), 47),
-                    }, 10, 40, (short)2009, (short)2020),
+                    }, 15, 150, (short)2009, (short)2020),
                     30,
                     150
             ));

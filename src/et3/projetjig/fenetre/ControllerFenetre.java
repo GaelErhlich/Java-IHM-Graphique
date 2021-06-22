@@ -108,8 +108,8 @@ public class ControllerFenetre
     }
 
     @Override
-    public void recoitObservationsParBDD(Observation[] obs) {
+    public void recoitObservationsParBDD(GeoHash geoHash, Observation[] obs) {
         especes.recoitObservations(obs);
-        //TODO : Mettre à jour GeoHash
+        terre.recoitGeoHash(geoHash);
     }
 }
