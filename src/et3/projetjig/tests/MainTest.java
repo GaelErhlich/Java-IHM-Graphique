@@ -100,23 +100,10 @@ public class MainTest extends Application {
             // */
 
 
-            ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
-            future = service.scheduleAtFixedRate(()->{
-                System.out.println("AH : "+k);
-                k++;
-                if(k == 10) {
-                    future.cancel(false);
-                }
-
-            }, 1,1, TimeUnit.SECONDS);
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    private int k = 0;
-    ScheduledFuture future;
 
 
     public static void main(String[] args) {

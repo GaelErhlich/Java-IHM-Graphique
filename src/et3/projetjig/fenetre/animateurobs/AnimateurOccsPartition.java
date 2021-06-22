@@ -14,9 +14,8 @@ public class AnimateurOccsPartition {
 
     AnimObsPartitionListener parent;
 
-    private final Button lire;
-    private final Button pause;
-    private final Button enPartition;
+    private final Button lireBtn;
+    private final Button globalBtn;
 
 
     private final static short MODE_ATTENTE = 0;
@@ -30,13 +29,11 @@ public class AnimateurOccsPartition {
     ScheduledFuture scheduleActuel = null;
 
 
-    public AnimateurOccsPartition(AnimObsPartitionListener parent, Button lire, Button pause, Button modePartition) {
+    public AnimateurOccsPartition(AnimObsPartitionListener parent, Button lireBtn, Button globalBtn) {
         this.parent = parent;
 
-        this.lire = lire;
-        this.pause = pause;
-        this.enPartition = modePartition;
-
+        this.lireBtn = lireBtn;
+        this.globalBtn = globalBtn;
     }
 
 
@@ -57,7 +54,8 @@ public class AnimateurOccsPartition {
 
 
     private void envoyerOccurrencesSuiv() {
-        parent.recoitOccurrencesParAnim(occPartition.suivant());
+        parent.recoitOccurrencesParAnim(occPartition.suivant(),
+                occPartition.getMinPourInterv(), occPartition.getMaxPourInterv());
     }
 
 
@@ -66,7 +64,8 @@ public class AnimateurOccsPartition {
         setMode(MODE_LIRE);
 
         // On initialise la lecture en mettant le premier intervalle sur l'interface
-        parent.recoitOccurrencesParAnim(occPartition.actuelle());
+        parent.recoitOccurrencesParAnim(occPartition.actuelle(),
+                occPartition.getMinPourInterv(), occPartition.getMaxPourInterv());
 
         // On programme pour régulièrement passer à l'animation suivante
         scheduleActuel = execService.scheduleAtFixedRate(this::envoyerOccurrencesSuiv,
@@ -87,7 +86,8 @@ public class AnimateurOccsPartition {
         if(mode == MODE_ATTENTE) { throw new AucuneOccsPartitionException(parent, this); }
         setMode(MODE_GLOBAL);
 
-        parent.recoitOccurrencesParAnim(occPartition.getOccsGlobales());
+        parent.recoitOccurrencesParAnim(occPartition.getOccsGlobales(),
+                occPartition.getMinGlobales(), occPartition.getMaxGlobales());
     }
 
 

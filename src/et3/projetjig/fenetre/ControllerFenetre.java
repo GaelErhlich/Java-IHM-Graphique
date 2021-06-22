@@ -1,7 +1,11 @@
 package et3.projetjig.fenetre;
 
+import et3.projetjig.donnees.DonneesInterface;
 import et3.projetjig.donnees.types.Observation;
+import et3.projetjig.donnees.types.Occurrences;
 import et3.projetjig.donnees.types.OccurrencesPartition;
+import et3.projetjig.fenetre.animateurobs.AnimObsPartitionListener;
+import et3.projetjig.fenetre.animateurobs.AnimateurOccsPartition;
 import et3.projetjig.fenetre.annees.AnneesSelecteur;
 import et3.projetjig.fenetre.annees.AnneesSelecteurListener;
 import et3.projetjig.fenetre.especes.EspecesSelecteur;
@@ -21,7 +25,11 @@ import java.util.ResourceBundle;
 
 public class ControllerFenetre
         implements Initializable, FenetreInterface,
-        CadreTerreListener, AnneesSelecteurListener, EspecesSelecteurListener {
+        CadreTerreListener, AnneesSelecteurListener, EspecesSelecteurListener,
+        AnimObsPartitionListener {
+
+
+    private DonneesInterface donnees;
 
 
     @FXML AnchorPane pane3dAnchor;
@@ -30,13 +38,27 @@ public class ControllerFenetre
 
     @FXML TextField especeFld;
 
-    @FXML Button animerBtn;
-
+    @FXML Button lireBtn;
+    @FXML Button globalBtn;
 
 
     private CadreTerre terre = null;
     private AnneesSelecteur annees = null;
     private EspecesSelecteur especes = null;
+    private AnimateurOccsPartition animateur = null;
+
+
+    private final static short MODE_INACTIF = 0;
+    private final static short MODE_OCCURRENCES = 1;
+    private final static short MODE_OBSERVATIONS = 2;
+    private short mode = MODE_INACTIF;
+
+
+    public ControllerFenetre(DonneesInterface donnees) {
+        this.donnees = donnees;
+    }
+
+
 
 
     @Override
@@ -54,28 +76,21 @@ public class ControllerFenetre
         especes = new EspecesSelecteur(this, 320, 150, especeFld);
         paneEspeces.getChildren().add(especes);
 
+        // Mise en place de l'animateur d'occurrences
+        animateur = new AnimateurOccsPartition(this, lireBtn, globalBtn);
 
     }
 
     @Override
     public boolean recoitGeoHashParUser(GeoHash geoHash) {
+        // TODO : Demander des observations
         return true;
     }
 
 
-    private void majAnimerBtn(short debutAnnee, short finAnnee) {
-        if (debutAnnee == finAnnee) {
-            animerBtn.setText("Année " + debutAnnee);
-            animerBtn.setDisable(true);
-        } else {
-            animerBtn.setText("Animer (" + debutAnnee + "-" + finAnnee + ")");
-            animerBtn.setDisable(false);
-        }
-    }
-
     @Override
     public void recoitAnneesParUser(short debutAnnee, short finAnnee) {
-        majAnimerBtn(debutAnnee, finAnnee);
+        // TODO : Demander de nouvelles occurrences
     }
 
 
@@ -111,5 +126,10 @@ public class ControllerFenetre
     public void recoitObservationsParBDD(GeoHash geoHash, Observation[] obs) {
         especes.recoitObservations(obs);
         terre.recoitGeoHash(geoHash);
+    }
+
+    @Override
+    public void recoitOccurrencesParAnim(Occurrences occurrences, int min, int max) {
+        terre.recoitOccurrences(occurrences, min, max);
     }
 }
