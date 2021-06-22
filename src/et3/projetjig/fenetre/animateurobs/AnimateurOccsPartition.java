@@ -1,6 +1,7 @@
 package et3.projetjig.fenetre.animateurobs;
 
 import et3.projetjig.donnees.types.OccurrencesPartition;
+import et3.projetjig.donnees.types.Taxon;
 import et3.projetjig.fenetre.animateurobs.exceptions.AucuneOccsPartitionException;
 import et3.projetjig.fenetre.animateurobs.exceptions.NotEnLectureException;
 import javafx.scene.control.Button;
@@ -88,6 +89,13 @@ public class AnimateurOccsPartition {
 
         parent.recoitOccurrencesParAnim(occPartition.getOccsGlobales(),
                 occPartition.getMinGlobales(), occPartition.getMaxGlobales());
+    }
+
+
+    public Taxon getEspece() throws AucuneOccsPartitionException {
+        if(mode == MODE_ATTENTE) { throw new AucuneOccsPartitionException(parent, this); }
+
+        return occPartition.getEspece();
     }
 
 

@@ -1,11 +1,12 @@
 package et3.projetjig.fenetre;
 
-import et3.projetjig.donnees.DonneesInterface;
+import et3.projetjig.donnees.Model;
 import et3.projetjig.donnees.types.Observation;
 import et3.projetjig.donnees.types.Occurrences;
 import et3.projetjig.donnees.types.OccurrencesPartition;
 import et3.projetjig.fenetre.animateurobs.AnimObsPartitionListener;
 import et3.projetjig.fenetre.animateurobs.AnimateurOccsPartition;
+import et3.projetjig.fenetre.animateurobs.exceptions.AucuneOccsPartitionException;
 import et3.projetjig.fenetre.annees.AnneesSelecteur;
 import et3.projetjig.fenetre.annees.AnneesSelecteurListener;
 import et3.projetjig.fenetre.especes.EspecesSelecteur;
@@ -29,7 +30,6 @@ public class ControllerFenetre
         AnimObsPartitionListener {
 
 
-    private DonneesInterface donnees;
 
 
     @FXML AnchorPane pane3dAnchor;
@@ -46,6 +46,7 @@ public class ControllerFenetre
     private AnneesSelecteur annees = null;
     private EspecesSelecteur especes = null;
     private AnimateurOccsPartition animateur = null;
+    private Model donnees = null;
 
 
     private final static short MODE_INACTIF = 0;
@@ -53,12 +54,9 @@ public class ControllerFenetre
     private final static short MODE_OBSERVATIONS = 2;
     private short mode = MODE_INACTIF;
 
-
-    public ControllerFenetre(DonneesInterface donnees) {
-        this.donnees = donnees;
+    public void setMode(short mode) {
+        this.mode = mode;
     }
-
-
 
 
     @Override
@@ -79,37 +77,45 @@ public class ControllerFenetre
         // Mise en place de l'animateur d'occurrences
         animateur = new AnimateurOccsPartition(this, lireBtn, globalBtn);
 
+        // Mise en place des données
+        donnees = new Model();
+        donnees.setListener(this);
+
+        // On lance les données par défaut
+        donnees.getDonneesParDefaut();
     }
 
     @Override
     public boolean recoitGeoHashParUser(GeoHash geoHash) {
-        // TODO : Demander des observations
+        donnees.getObservations(geoHash);
         return true;
     }
 
 
     @Override
     public void recoitAnneesParUser(short debutAnnee, short finAnnee) {
-        // TODO : Demander de nouvelles occurrences
+        if(mode == MODE_OCCURRENCES) {
+            try {
+                donnees.getOccurences(animateur.getEspece().getNomScientifique(), annees.getDebut(), annees.getFin());
+            } catch(AucuneOccsPartitionException e) { e.printStackTrace(); }
+        }
     }
 
 
     @Override
     public void recoitEspeceParUser(String nom) {
-        System.out.println("Nouvelle espèce sélectionnée : "+nom);
-        // TODO : demander les informations sur l'espèce
-
+        donnees.getOccurences(nom, annees.getDebut(), annees.getFin());
     }
 
 
     @Override
     public void recoitOccurrencesParBDD(OccurrencesPartition op) {
+        setMode(MODE_OCCURRENCES);
+
         especes.recoitEspece(op.getEspece());
         annees.setDebut(op.getAnneeDebut());
         annees.setFin(op.getAnneeFin());
-        terre.recoitOccurrences(op.getOccsGlobales(), op.getMinGlobales(), op.getMaxGlobales()); // TODO : TEMPORAIRE
-        // TODO : Afficher sur le globe
-        // TODO : Stocker
+        animateur.setOccPartition(op);
     }
 
     @Override
@@ -124,12 +130,17 @@ public class ControllerFenetre
 
     @Override
     public void recoitObservationsParBDD(GeoHash geoHash, Observation[] obs) {
+        setMode(MODE_OBSERVATIONS);
+
         especes.recoitObservations(obs);
         terre.recoitGeoHash(geoHash);
     }
 
     @Override
     public void recoitOccurrencesParAnim(Occurrences occurrences, int min, int max) {
+        setMode(MODE_OCCURRENCES);
+
+        especes.recoitEspece(occurrences.getEspece());
         terre.recoitOccurrences(occurrences, min, max);
     }
 }

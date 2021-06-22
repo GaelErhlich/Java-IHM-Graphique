@@ -1,6 +1,5 @@
 package et3.projetjig;
 
-import et3.projetjig.donnees.types.*;
 import et3.projetjig.fenetre.ControllerFenetre;
 import et3.projetjig.fenetre.terre.CadreTerre;
 import javafx.application.Application;
@@ -8,7 +7,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import kungfoo.geohash.src.main.java.ch.hsr.geohash.GeoHash;
 
 import java.io.IOException;
 
