@@ -138,6 +138,18 @@ public class SphereTerre extends Group {
         ajouteCarreANode(latMin, latMax, lonMin, lonMax, material, souscarres);
     }
 
+    public void ajouterGeoHash(GeoHash geoHash, Color color) {
+        // TODO
+        PhongMaterial material = new PhongMaterial( color );
+        BoundingBox box = geoHash.getBoundingBox();
+
+        ajouteCarre(
+                box.getSouthLatitude(), box.getNorthLatitude(),
+                box.getWestLongitude(), box.getEastLongitude(),
+                material
+        );
+    }
+
 
     public void supprimeCarres() {
         this.carres.getChildren().clear();

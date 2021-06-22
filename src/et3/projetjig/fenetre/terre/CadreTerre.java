@@ -1,15 +1,21 @@
 package et3.projetjig.fenetre.terre;
 
 import et3.outils3d.CameraManager;
+import et3.projetjig.donnees.types.Occurrence;
+import et3.projetjig.donnees.types.Occurrences;
 import et3.projetjig.fenetre.terre.sphereterre.SphereTerre;
 import javafx.scene.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import kungfoo.geohash.src.main.java.ch.hsr.geohash.GeoHash;
 
-public class CadreTerre extends Pane implements CadreTerreInterface {
+public class CadreTerre extends Pane {
 
-    private CadreTerreListener fenetre;
+    public static short NOMBRE_INTERVALLES = 8;
+
+
+
+    private final CadreTerreListener fenetre;
 
     /**
      * Groupe contenant les Mesh de la Terre
@@ -113,8 +119,23 @@ public class CadreTerre extends Pane implements CadreTerreInterface {
         return sphereTerre;
     }
 
-    @Override
+
     public void recoitGeoHash(GeoHash geoHash) {
         sphereTerre.setGeoHash(geoHash);
+    }
+
+
+
+
+    public void recoitOccurrences(Occurrences occurrences, int min, int max) {
+        float tailleInterv = ((float)(max - min)) / NOMBRE_INTERVALLES;
+
+        for(Occurrence occ : occurrences.getOccurrences()) {
+            short niveau = (short)( (occ.getOccurrences() - min) / tailleInterv);
+            niveau = (short) Math.min(Math.max(niveau, 0),NOMBRE_INTERVALLES-1);
+            Color color = new Color(1.0 - niveau*0.125, niveau*0.125, 0.0, 0.1);
+            sphereTerre.ajouterGeoHash(occ.getGeohash(), color);
+        }
+        // TODO
     }
 }

@@ -4,14 +4,14 @@ public class OccurrencesPartition {
 
   private Taxon espece;
   private Occurrences[] occurrences;
-  private Occurrence[] occGlobales;
+  private Occurrences occGlobales;
   private int minOccurrences;
   private int maxOccurrences;
   private short anneeDebut;
   private short anneeFin;
 
 
-  public OccurrencesPartition(Taxon espece, Occurrences[] occurrences, Occurrence[] occGlobales, int minOccurrences, int maxOccurrences, short anneeDebut, short anneeFin) {
+  public OccurrencesPartition(Taxon espece, Occurrences[] occurrences, Occurrences occGlobales, int minOccurrences, int maxOccurrences, short anneeDebut, short anneeFin) {
     this.espece = espece;
     this.occurrences = occurrences;
     this.occGlobales = occGlobales;
@@ -25,7 +25,7 @@ public class OccurrencesPartition {
     return espece;
   }
 
-  public Occurrence[] getOccurrences() {
+  public Occurrences getOccurrences() {
     return occGlobales;
   }
 

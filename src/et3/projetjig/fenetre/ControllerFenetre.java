@@ -94,6 +94,7 @@ public class ControllerFenetre
         especes.recoitEspece(op.getEspece());
         annees.setDebut(op.getAnneeDebut());
         annees.setFin(op.getAnneeFin());
+        terre.recoitOccurrences(op.getOccurrences(), op.getMin(), op.getMax()); // TODO : TEMPORAIRE
         // TODO : Afficher sur le globe
         // TODO : Stocker
     }
