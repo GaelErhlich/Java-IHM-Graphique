@@ -104,11 +104,13 @@ public class AnimateurOccsPartition {
 
     private void envoyerOccurrencesSuiv() {
         Platform.runLater(()->{
-            parent.recoitOccurrencesParAnim(occPartition.suivant(),
-                    occPartition.getMinPourInterv(), occPartition.getMaxPourInterv());
+            if(scheduleActuel != null) {
+                parent.recoitOccurrencesParAnim(occPartition.suivant(),
+                        occPartition.getMinPourInterv(), occPartition.getMaxPourInterv());
 
-            lireBtn.setText("Pauser évolution ("
-                    +occPartition.actuelle().getAnneeDebut()+"-"+occPartition.actuelle().getAnneeFin()+")");
+                lireBtn.setText("Pauser évolution ("
+                        +occPartition.actuelle().getAnneeDebut()+"-"+occPartition.actuelle().getAnneeFin()+")");
+            }
         });
     }
 
@@ -152,6 +154,7 @@ public class AnimateurOccsPartition {
         if(mode == MODE_ATTENTE) { throw new AucuneOccsPartitionException(parent, this); }
         setMode(MODE_GLOBAL);
 
+        occPartition.mettreDebut();
         parent.recoitOccurrencesParAnim(occPartition.getOccsGlobales(),
                 occPartition.getMinGlobales(), occPartition.getMaxGlobales());
 

@@ -181,7 +181,11 @@ public class CadreTerre extends Pane {
 
 
     public void recoitGeoHash(GeoHash geoHash) {
-        sphereTerre.setGeoHash(geoHash);
+        Platform.runLater(()->{
+            sphereTerre.supprimeCarres();
+            sphereTerre.supprimerHistogramme();
+            sphereTerre.setGeoHash(geoHash);
+        });
     }
 
 
@@ -212,8 +216,11 @@ public class CadreTerre extends Pane {
     }
 
 
-    public void recoitCmdDeselectCarres() {
-        Platform.runLater(()-> sphereTerre.supprimeCarres() );
+    public void recoitCmdDeselectCarresEtHist() {
+        Platform.runLater(()-> {
+            sphereTerre.supprimeCarres();
+            sphereTerre.supprimerHistogramme();
+        } );
     }
 
 }

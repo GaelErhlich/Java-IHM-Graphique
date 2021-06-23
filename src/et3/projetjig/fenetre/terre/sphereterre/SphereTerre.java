@@ -207,6 +207,7 @@ public class SphereTerre extends Group {
     }
 
     public void deselectionnerLocPrincipale() {
+        carresGeoHash.getChildren().clear();
         localisationPrincipale.getChildren().clear();
     }
 
@@ -233,9 +234,6 @@ public class SphereTerre extends Group {
 
     public void setGeoHash(GeoHash geoHash) {
 
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
 
 
                 // Si le point actuellement sélectionné n'est pas dans le geohash,
@@ -256,8 +254,7 @@ public class SphereTerre extends Group {
                 // On met ensuite le GeoHash à jour sur le globe
                 majCarreGeoHash();
 
-            }
-        });
+
     }
 
 

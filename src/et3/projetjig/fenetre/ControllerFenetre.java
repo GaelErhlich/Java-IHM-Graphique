@@ -133,7 +133,7 @@ public class ControllerFenetre
         setMode(MODE_OBSERVATIONS);
 
         animateur.attente();
-        terre.recoitCmdDeselectCarres();
+        terre.recoitCmdDeselectCarresEtHist();
         especes.recoitObservations(obs);
         terre.recoitGeoHash(geoHash);
     }
@@ -148,6 +148,6 @@ public class ControllerFenetre
 
     @Override
     public void recoitDeselectOccsParAnim() {
-        terre.recoitCmdDeselectCarres();
+        terre.recoitCmdDeselectCarresEtHist();
     }
 }
