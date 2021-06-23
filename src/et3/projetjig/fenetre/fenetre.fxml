@@ -19,8 +19,16 @@
                   <HBox />
                   <HBox AnchorPane.leftAnchor="20.0">
                      <children>
-                        <Button fx:id="lireBtn" mnemonicParsing="false" text="Lire évolution occurrences ( - )" />
-                        <Button fx:id="globalBtn" mnemonicParsing="false" text="Global" />
+                        <Button fx:id="lireBtn" mnemonicParsing="false" text="Lire évolution occurrences" />
+                        <Button fx:id="globalBtn" mnemonicParsing="false" text="Occurrences toute période">
+                           <font>
+                              <Font size="10.0" />
+                           </font></Button>
+                        <Button fx:id="histogBtn" mnemonicParsing="false" text="Histogramme">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                        </Button>
                      </children>
                   </HBox>
                </children>

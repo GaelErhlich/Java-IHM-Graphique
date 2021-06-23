@@ -45,6 +45,7 @@ public class ControllerFenetre
 
     @FXML Button lireBtn;
     @FXML Button globalBtn;
+    @FXML Button histogBtn;
 
     @FXML Label chargementTxt;
     InactiviteDetect chargeTxtInactiver =
@@ -72,7 +73,7 @@ public class ControllerFenetre
     public void initialize(URL location, ResourceBundle resources) {
 
         // Mise du cadreTerre
-        terre = new CadreTerre(500, 500, this);
+        terre = new CadreTerre(500, 500, this, histogBtn);
         pane3dAnchor.getChildren().add(terre);
 
         // Mise du sélecteur d'année (composant graphique AnneesSelecteur)
@@ -84,7 +85,9 @@ public class ControllerFenetre
         paneEspeces.getChildren().add(especes);
 
         // Mise en place de l'animateur d'occurrences
-        animateur = new AnimateurOccsPartition(this, lireBtn, globalBtn);
+        animateur = new AnimateurOccsPartition(this, lireBtn, globalBtn, new Button[] {
+                histogBtn
+        });
 
         // Mise en place des données
         donnees = new Model();

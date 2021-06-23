@@ -19,6 +19,7 @@ public class AnimateurOccsPartition {
 
     private final Button lireBtn;
     private final Button globalBtn;
+    private Button[] btnsDesactivables;
 
 
     private final static short MODE_ATTENTE = 0;
@@ -32,11 +33,12 @@ public class AnimateurOccsPartition {
     ScheduledFuture scheduleActuel = null;
 
 
-    public AnimateurOccsPartition(AnimObsPartitionListener parent, Button lireBtn, Button globalBtn) {
+    public AnimateurOccsPartition(AnimObsPartitionListener parent, Button lireBtn, Button globalBtn, Button[] btnsDesactivables) {
         this.parent = parent;
 
         this.lireBtn = lireBtn;
         this.globalBtn = globalBtn;
+        this.btnsDesactivables = btnsDesactivables;
 
         attente();
 
@@ -87,6 +89,8 @@ public class AnimateurOccsPartition {
             scheduleActuel = null;
         }
 
+        desactiveBtnsDesactivables(animateurMode == MODE_ATTENTE);
+
         mode = animateurMode;
     }
 
@@ -99,6 +103,14 @@ public class AnimateurOccsPartition {
             global();
         } catch(AucuneOccsPartitionException ignored) {}
     }
+
+
+    public void desactiveBtnsDesactivables(boolean estInactif) {
+        for(Button btn : btnsDesactivables) {
+            btn.setDisable(estInactif);
+        }
+    }
+
 
 
 

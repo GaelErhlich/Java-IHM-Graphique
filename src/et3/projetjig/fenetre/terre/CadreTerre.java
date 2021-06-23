@@ -7,6 +7,7 @@ import et3.projetjig.fenetre.terre.sphereterre.SphereTerre;
 import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.scene.*;
+import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -51,10 +52,21 @@ public class CadreTerre extends Pane {
      */
     private final Text echelleBas;
 
+    /**
+     * Bouton activant ou désactivant les histogrammes
+     */
+    private final Button histogBtn;
+
 
 
     private Camera camera;
     private CameraManager cameraManager;
+
+
+    private Occurrences occurrences = null;
+    private int minOcc = 0;
+    private int maxOcc = 0;
+    private boolean estModeHistog;
 
 
 
@@ -64,8 +76,9 @@ public class CadreTerre extends Pane {
      * @param height la hauteur du Pane 3D
      * @param fenetre Fenêtre à laquelle correspond ce cadre, à laquelle envoyer des informations
      */
-    public CadreTerre(int width, int height, CadreTerreListener fenetre) {
+    public CadreTerre(int width, int height, CadreTerreListener fenetre, Button histogBtn) {
         this.fenetre = fenetre;
+        this.histogBtn = histogBtn;
 
         this.initialiseFormes(width, height);
         this.initialiseCamera();
@@ -89,9 +102,7 @@ public class CadreTerre extends Pane {
 
 
         // Déclaration des événements
-        CadreTerreEvents.declare(this);
-
-
+        CadreTerreEvents.declare(this, histogBtn);
 
     }
 
@@ -197,31 +208,66 @@ public class CadreTerre extends Pane {
     }
 
 
+    public void activeModeHistog() {
+        this.estModeHistog = true;
+
+        Platform.runLater(()->{
+            histogBtn.setText("Histogramme ON");
+            dessineOccurrences();
+        });
+    }
+
+    public void desactiveModeHistog() {
+        this.estModeHistog = false;
+
+        Platform.runLater(()->{
+            histogBtn.setText("Histogramme OFF");
+            dessineOccurrences();
+        });
+    }
+
+    public boolean estHistogramme() {
+        return estModeHistog;
+    }
+
+
 
     public void recoitOccurrences(Occurrences occurrences, int min, int max) {
-        Platform.runLater(()->{
+        this.occurrences = occurrences;
+        this.minOcc = min;
+        this.maxOcc = max;
+        dessineOccurrences();
+    }
 
-            echelleBas.setText( Integer.toString(min) );
-            echelleHaut.setText( Integer.toString(max) );
 
-            sphereTerre.deselectionnerLocPrincipale();
-            sphereTerre.supprimeCarres();
-            sphereTerre.supprimerHistogramme();
+    public void dessineOccurrences() {
+        if(occurrences != null) {
 
-            float tailleInterv = ((float)(max - min)) / NOMBRE_INTERVALLES;
+            Platform.runLater(()->{
 
-            for(Occurrence occ : occurrences.getOccurrences()) {
-                short niveau = niveauEchellePourValeur(occ.getNombreOccu(), min, max, tailleInterv);
+                echelleBas.setText( Integer.toString(minOcc) );
+                echelleHaut.setText( Integer.toString(maxOcc) );
 
-                sphereTerre.ajouterGeoHash(occ.getGeohash(), couleurEchellePourNiveau(niveau, 0.1f));
+                sphereTerre.deselectionnerLocPrincipale();
+                sphereTerre.supprimeCarres();
+                sphereTerre.supprimerHistogramme();
 
-                //WGS84Point box = occ.getGeohash().getBoundingBoxCenter();
-                /*sphereTerre.recoitHistogramme(new Point2D(box.getLatitude(), box.getLongitude()),
-                        occ.getNombreOccu(), max, couleurEchellePourNiveau(niveau, 1.0f));
+                float tailleInterv = ((float)(maxOcc - minOcc)) / NOMBRE_INTERVALLES;
 
-                 */
-            }
-        });
+                for(Occurrence occ : occurrences.getOccurrences()) {
+                    short niveau = niveauEchellePourValeur(occ.getNombreOccu(), minOcc, maxOcc, tailleInterv);
+
+                    if( estHistogramme() ) {
+                        WGS84Point box = occ.getGeohash().getBoundingBoxCenter();
+                        sphereTerre.recoitHistogramme(new Point2D(box.getLatitude(), box.getLongitude()),
+                                occ.getNombreOccu(), maxOcc, couleurEchellePourNiveau(niveau, 1.0f));
+                    }
+                    else {
+                        sphereTerre.ajouterGeoHash(occ.getGeohash(), couleurEchellePourNiveau(niveau, 0.1f));
+                    }
+                }
+            });
+        }
     }
 
 

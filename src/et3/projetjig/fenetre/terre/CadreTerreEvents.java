@@ -5,6 +5,7 @@ import et3.projetjig.fenetre.terre.sphereterre.SphereTerre;
 import et3.projetjig.fenetre.terre.sphereterre.exceptions.NullLocalisationPrincipale;
 import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
+import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.PickResult;
 import javafx.scene.input.ScrollEvent;
@@ -13,10 +14,11 @@ import kungfoo.geohash.src.main.java.ch.hsr.geohash.GeoHash;
 
 public class CadreTerreEvents {
 
-    public static void declare(CadreTerre cadreTerre) {
+    public static void declare(CadreTerre cadreTerre, Button histogBtn) {
 
         initialiseEventsClic(cadreTerre);
         initialiseEventsMolette(cadreTerre);
+        initialiseEventsBoutons(cadreTerre, histogBtn);
 
     }
 
@@ -70,6 +72,22 @@ public class CadreTerreEvents {
                 catch(NullLocalisationPrincipale ignored) {}
             }
         });
+    }
+
+
+    private static void initialiseEventsBoutons(CadreTerre cadreTerre, Button histogBtn) {
+
+        histogBtn.setOnMousePressed((event)->{
+
+            if(cadreTerre.estHistogramme()) {
+                cadreTerre.desactiveModeHistog();
+            }
+            else {
+                cadreTerre.activeModeHistog();
+            }
+
+        });
+
     }
 
 
