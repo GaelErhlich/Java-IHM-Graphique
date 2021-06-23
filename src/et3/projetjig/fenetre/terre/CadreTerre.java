@@ -4,6 +4,7 @@ import et3.outils3d.CameraManager;
 import et3.projetjig.donnees.types.Occurrence;
 import et3.projetjig.donnees.types.Occurrences;
 import et3.projetjig.fenetre.terre.sphereterre.SphereTerre;
+import et3.projetjig.fenetre.terre.sphereterre.exceptions.NullLocalisationPrincipale;
 import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.scene.*;
@@ -233,10 +234,20 @@ public class CadreTerre extends Pane {
 
 
     public void recoitOccurrences(Occurrences occurrences, int min, int max) {
-        this.occurrences = occurrences;
-        this.minOcc = min;
-        this.maxOcc = max;
-        dessineOccurrences();
+        Platform.runLater(()->{
+
+            this.occurrences = occurrences;
+            this.minOcc = min;
+            this.maxOcc = max;
+
+            if(occurrences.getOccurrences().length > 0 && sphereTerre.getGeoHash() != null) {
+                try {
+                    sphereTerre.setPrecision( occurrences.getOccurrences()[0].getGeohash().significantBits() );
+                } catch(NullLocalisationPrincipale ignored) { }
+            }
+
+            dessineOccurrences();
+        });
     }
 
 

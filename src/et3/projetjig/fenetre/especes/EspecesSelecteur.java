@@ -27,6 +27,7 @@ public class EspecesSelecteur extends ListView<String> {
 
 
     private Observation[] observations = null;
+    private String nomScientifique = "";
 
 
 
@@ -93,17 +94,23 @@ public class EspecesSelecteur extends ListView<String> {
     }
 
 
+    public String getNomScientifique() {
+        return nomScientifique;
+    }
+
 
     public void recoitEspece(Taxon espece) {
         Platform.runLater(()->{
             this.setMode(MODE_INFO_ESPECE);
             this.setItems( FXCollections.observableArrayList(
-                    "------------ Espèce actuelle ------------",
+                    "------------ Type actuel ------------",
                     "Nom scientifique : "+espece.getNomScientifique(),
                     "Identifiant : "+espece.getId(),
                     "Rang : "+espece.getRang(),
                     "Phylum : "+espece.getPhylum()
             ));
+            nomScientifique = espece.getNomScientifique();
+            field.setText(espece.getNomScientifique());
         });
     }
 

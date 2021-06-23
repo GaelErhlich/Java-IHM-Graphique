@@ -80,7 +80,7 @@ public class Model {
       GeoHash geohash = GeoHash.withCharacterPrecision(
               (nw.getDouble(1) + se.getDouble(1)) / 2,
               (nw.getDouble(0) + se.getDouble(0)) / 2,
-              3
+              8
       );
 
       occGlob[i] = new Occurrence(geohash, n);
@@ -345,11 +345,27 @@ public class Model {
     }
   }
 
-  public void getObservations(GeoHash geoH) {
+  public void getObservations(GeoHash geoH, String nom) {
     String geoStr = geoH.toBase32();
     URI uri;
     try {
-      uri = new URI(adresse + "occurrence?geometry=" + geoStr);
+
+      String nomScienti;
+      if(!nom.equals("")) {
+        nomScienti = URLEncoder.encode(nom, "UTF-8");
+        nomScienti = nomScienti.replace("+", "%20");
+        nomScienti = "scientificname="+nomScienti+"&";
+      }
+      else {
+        nomScienti = "";
+      }
+
+      uri = new URI(adresse
+              +"occurrence?"
+              +nomScienti
+              +"geometry=" + geoStr
+      );
+
       JSONObject o = JsonReader.readJsonObjectFromUrl(uri.toString());
       JSONArray a = o.getJSONArray("results");
 
@@ -403,6 +419,8 @@ public class Model {
       listener.recoitObservationsParBDD(geoH, obs);
     } catch (URISyntaxException e) {
       e.printStackTrace();
+    } catch (UnsupportedEncodingException e) {
+      listener.recoitErreurEspece(nom);
     }
   }
 

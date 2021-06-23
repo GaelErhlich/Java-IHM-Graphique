@@ -212,13 +212,4 @@ public class AnimateurOccsPartition {
 
     }
 
-
-
-    public Taxon getEspece() throws AucuneOccsPartitionException {
-        if(mode == MODE_ATTENTE) { throw new AucuneOccsPartitionException(parent, this); }
-
-        return occPartition.getEspece();
-    }
-
-
 }

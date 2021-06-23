@@ -116,22 +116,19 @@ public class ControllerFenetre
 
         if(mode == MODE_OBSERVATIONS || mode == MODE_INACTIF) {
             setChargementTxt("Chargement des observations sur "+geoHash.toBase32()+"...");
-            geoHashUserInactiver.ping(()-> donnees.getObservations(geoHash) );
+            geoHashUserInactiver.ping(()-> donnees.getObservations(geoHash, especes.getNomScientifique()) );
         }
 
 
         else if(mode == MODE_OCCURRENCES) {
-            try {
-                String espece = animateur.getEspece().getNomScientifique();
-                setChargementTxt("Chargement des occurrences de "+espece+" ("
-                        +annees.getDebut()+"-"+annees.getFin()+")...");
+            String espece = especes.getNomScientifique();
+            setChargementTxt("Chargement des occurrences de "+espece+" ("
+                    +annees.getDebut()+"-"+annees.getFin()+")...");
 
-                anneeUserInactiver.ping(()-> {
-                    donnees.getOccurences(espece, annees.getDebut(), annees.getFin(),
-                            terre.getGeoHash().getCharacterPrecision());
-                });
-
-            } catch(AucuneOccsPartitionException e) { e.printStackTrace(); }
+            anneeUserInactiver.ping(()-> {
+                donnees.getOccurences(espece, annees.getDebut(), annees.getFin(),
+                        terre.getGeoHash().getCharacterPrecision());
+            });
         }
     }
 
@@ -139,7 +136,7 @@ public class ControllerFenetre
     @Override
     public void recoitGeoHashParUser(GeoHash geoHash) {
         setChargementTxt("Chargement des observations sur "+geoHash.toBase32()+"...");
-        geoHashUserInactiver.ping(()-> donnees.getObservations(geoHash) );
+        geoHashUserInactiver.ping(()-> donnees.getObservations(geoHash, especes.getNomScientifique()) );
     }
 
 
@@ -147,16 +144,13 @@ public class ControllerFenetre
     @Override
     public void recoitAnneesParUser(short debutAnnee, short finAnnee) {
         if(mode == MODE_OCCURRENCES) {
-            try {
-                String espece = animateur.getEspece().getNomScientifique();
-                setChargementTxt("Chargement des occurrences de "+espece+" ("+debutAnnee+"-"+finAnnee+")...");
+            String espece = especes.getNomScientifique();
+            setChargementTxt("Chargement des occurrences de "+espece+" ("+debutAnnee+"-"+finAnnee+")...");
 
-                anneeUserInactiver.ping(()-> {
-                        donnees.getOccurences(espece, annees.getDebut(), annees.getFin(),
-                                terre.getGeoHash().getCharacterPrecision());
-                });
-
-            } catch(AucuneOccsPartitionException e) { e.printStackTrace(); }
+            anneeUserInactiver.ping(()-> {
+                donnees.getOccurences(espece, annees.getDebut(), annees.getFin(),
+                        terre.getGeoHash().getCharacterPrecision());
+            });
         }
     }
 

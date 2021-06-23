@@ -236,8 +236,6 @@ public class SphereTerre extends Group {
 
     public void setGeoHash(GeoHash geoHash) {
 
-
-
                 // Si le point actuellement sélectionné n'est pas dans le geohash,
                 // on l'y remet pour éviter des problèmes plus tard.
                 try {
@@ -256,12 +254,25 @@ public class SphereTerre extends Group {
                 // On met ensuite le GeoHash à jour sur le globe
                 majCarreGeoHash();
 
-
     }
 
 
+    public void setPrecision(int precision) throws NullLocalisationPrincipale {
+        Point2D coords = getLocPrincipaleCoords2d();
+        setGeoHash(GeoHash.withBitPrecision(coords.getX(), coords.getY(), precision));
+    }
+
+
+
     public GeoHash getGeoHash() {
-        return GeoHash.withBitPrecision(locPrincipaleCoords2d.getX(), locPrincipaleCoords2d.getY(), getNombreDeBits());
+        try {
+            Point2D coords = getLocPrincipaleCoords2d();
+            return GeoHash.withBitPrecision(coords.getX(), coords.getY(), getNombreDeBits());
+        }
+        catch(NullLocalisationPrincipale e) {
+            return null;
+        }
+
     }
 
 
