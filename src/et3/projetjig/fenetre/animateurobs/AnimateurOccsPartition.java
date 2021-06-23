@@ -33,6 +33,13 @@ public class AnimateurOccsPartition {
     ScheduledFuture scheduleActuel = null;
 
 
+    /**
+     *
+     * @param parent Composant contenant celui-ci et l'écoutant
+     * @param lireBtn Button permettant de déclencher la lecture
+     * @param globalBtn Button permettant de passer en mode "occurrences globales"
+     * @param btnsDesactivables liste de Buttons à désactiver lorsqu'il n'y a pas d'animation
+     */
     public AnimateurOccsPartition(AnimObsPartitionListener parent, Button lireBtn, Button globalBtn, Button[] btnsDesactivables) {
         this.parent = parent;
 
@@ -64,6 +71,7 @@ public class AnimateurOccsPartition {
                 e.printStackTrace();
             }
         }));
+
 
 
         globalBtn.addEventHandler(MouseEvent.MOUSE_PRESSED, (event -> {
