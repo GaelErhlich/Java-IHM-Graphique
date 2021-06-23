@@ -121,6 +121,11 @@ public class Model {
           occGlob[i] = new Occurrence(geohash, n);
         }
 
+        if(min == Integer.MAX_VALUE) {
+          min = 0;
+          max = 0;
+        }
+
         Occurrences occGlobal = new Occurrences(
           t,
           occGlob,
@@ -180,6 +185,11 @@ public class Model {
             occ[i] = new Occurrence(geohash, n);
           }
 
+          if(min1 == Integer.MAX_VALUE) {
+            min1 = 0;
+            max1 = 0;
+          }
+
           occurrences[(j-anneeDebut)/5] =
             new Occurrences(
               t,
@@ -197,6 +207,11 @@ public class Model {
             maxAllInterv = max;
           }
 
+        }
+
+        if(minAllInterv == Integer.MAX_VALUE) {
+          minAllInterv = 0;
+          maxAllInterv = 0;
         }
         try {
           listener.recoitOccurrencesParBDD(

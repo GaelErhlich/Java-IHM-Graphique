@@ -11,7 +11,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import kungfoo.geohash.src.main.java.ch.hsr.geohash.BoundingBox;
 import kungfoo.geohash.src.main.java.ch.hsr.geohash.GeoHash;
 import kungfoo.geohash.src.main.java.ch.hsr.geohash.WGS84Point;
 
@@ -75,8 +74,8 @@ public class CadreTerre extends Pane {
 
         // Echelle
         Rectangle rect;
-        for(short i = (short)(NOMBRE_INTERVALLES-1); i >= 0; i--) {
-            rect = new Rectangle(10,10 + i*10,10,10);
+        for(short i = 0; i < NOMBRE_INTERVALLES; i++) {
+            rect = new Rectangle(10,(NOMBRE_INTERVALLES-i)*10,10,10);
             rect.setFill( couleurEchellePourNiveau(i, 1.0f) );
             this.legendes.getChildren().add(rect);
         }
