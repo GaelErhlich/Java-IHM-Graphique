@@ -14,9 +14,11 @@ import et3.projetjig.fenetre.especes.EspecesSelecteurListener;
 import et3.projetjig.fenetre.terre.CadreTerre;
 import et3.projetjig.fenetre.terre.CadreTerreListener;
 import et3.util.InactiviteDetect;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -24,6 +26,7 @@ import kungfoo.geohash.src.main.java.ch.hsr.geohash.GeoHash;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 
 public class ControllerFenetre
         implements Initializable, FenetreInterface,
@@ -31,6 +34,7 @@ public class ControllerFenetre
         AnimObsPartitionListener {
 
 
+    public final static int DUREE_CHARGEMENT_MESS_MS = 5000;
 
 
     @FXML AnchorPane pane3dAnchor;
@@ -41,6 +45,10 @@ public class ControllerFenetre
 
     @FXML Button lireBtn;
     @FXML Button globalBtn;
+
+    @FXML Label chargementTxt;
+    InactiviteDetect chargeTxtInactiver =
+            new InactiviteDetect(()-> setChargementTxt(""), DUREE_CHARGEMENT_MESS_MS);
 
 
     private CadreTerre terre = null;
@@ -84,12 +92,25 @@ public class ControllerFenetre
 
         // On lance les données par défaut
         donnees.getDonneesParDefaut();
+        chargementTxt.setText("Chargement des occurrences par défaut...");
     }
+
+
+    private void setChargementTxt(String nouvTexte) {
+        Platform.runLater(()-> chargementTxt.setText(nouvTexte));
+    }
+
+    private void setChargementTxtTemp(String nouvText) {
+        setChargementTxt(nouvText);
+        chargeTxtInactiver.ping();
+    }
+
 
 
     InactiviteDetect geoHashUserInactiver = new InactiviteDetect(null, 500);
     @Override
     public boolean recoitGeoHashParUser(GeoHash geoHash) {
+        setChargementTxt("Chargement des observations sur "+geoHash.toBase32()+"...");
         geoHashUserInactiver.ping(()-> donnees.getObservations(geoHash) );
         return true;
     }
@@ -99,11 +120,15 @@ public class ControllerFenetre
     @Override
     public void recoitAnneesParUser(short debutAnnee, short finAnnee) {
         if(mode == MODE_OCCURRENCES) {
-            anneeUserInactiver.ping(()-> {
-                try {
-                    donnees.getOccurences(animateur.getEspece().getNomScientifique(), annees.getDebut(), annees.getFin());
-                } catch(AucuneOccsPartitionException e) { e.printStackTrace(); }
-            });
+            try {
+                String espece = animateur.getEspece().getNomScientifique();
+                setChargementTxt("Chargement des occurrences de "+espece+" ("+debutAnnee+"-"+finAnnee+")...");
+
+                anneeUserInactiver.ping(()-> {
+                        donnees.getOccurences(espece, annees.getDebut(), annees.getFin());
+                });
+
+            } catch(AucuneOccsPartitionException e) { e.printStackTrace(); }
         }
     }
 
@@ -111,12 +136,14 @@ public class ControllerFenetre
     InactiviteDetect especeUserInactiver = new InactiviteDetect(null, 500);
     @Override
     public void recoitEspeceParUser(String nom) {
+        setChargementTxt("Recherche de l'espèce "+nom+"...");
         especeUserInactiver.ping(()-> donnees.getOccurences(nom, annees.getDebut(), annees.getFin()) );
     }
 
 
     @Override
     public void recoitOccurrencesParBDD(OccurrencesPartition op) {
+        setChargementTxtTemp("Espèce chargée : "+op.getEspece().getNomScientifique());
         setMode(MODE_OCCURRENCES);
 
         especes.recoitEspece(op.getEspece());
@@ -127,16 +154,19 @@ public class ControllerFenetre
 
     @Override
     public void recoitEspecesParBDD(String[] nomsEspeces) {
+        setChargementTxtTemp("Plusieurs espèces trouvées");
         especes.recoitListeEspeces(nomsEspeces);
     }
 
     @Override
     public void recoitErreurEspece(String nomInvalide) {
+        setChargementTxtTemp("Erreur...");
         especes.recoitErreurEspece(nomInvalide);
     }
 
     @Override
     public void recoitObservationsParBDD(GeoHash geoHash, Observation[] obs) {
+        setChargementTxtTemp("Observation reçue pour le geohash : "+geoHash.toBase32());
         setMode(MODE_OBSERVATIONS);
 
         animateur.attente();

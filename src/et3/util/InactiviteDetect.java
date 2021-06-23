@@ -33,4 +33,11 @@ public class InactiviteDetect {
         ping();
     }
 
+    public void reinitialise() {
+        if(schedule != null) {
+            schedule.cancel(false);
+            schedule = null;
+        }
+    }
+
 }

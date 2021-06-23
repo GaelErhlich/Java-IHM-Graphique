@@ -18,9 +18,6 @@ public class Main extends Application {
         try {
 
             ControllerFenetre fenetre = new ControllerFenetre();
-            CadreTerre paneTerre = new CadreTerre(500,500, fenetre);
-
-
             FXMLLoader loader = new FXMLLoader( getClass().getResource("fenetre/fenetre.fxml") );
             loader.setController(fenetre);
             Parent root = loader.load();
