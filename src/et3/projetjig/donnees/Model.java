@@ -22,7 +22,89 @@ public class Model {
   private final String adresse = "https://api.obis.org/v3/";
   private ControllerFenetre listener = null;
 
-  public void getDonneesParDefaut() {}
+  public void getDonneesParDefaut() {
+    JSONObject obj = JsonReader.readFromFile(
+            "src/et3/projetjig/donnees/ressources.json"
+    );
+
+    JSONObject res = obj.getJSONObject("taxon");
+
+    String scientificName;
+    try {
+      scientificName = res.getString("scientificName");
+    } catch (JSONException e) {
+      scientificName = "";
+    }
+    String rank;
+    try {
+      rank = res.getString("rank");
+    } catch (JSONException e) {
+      rank = "";
+    }
+
+    int id;
+    try {
+      id = res.getInt("id");
+    } catch (JSONException e) {
+      id = 0;
+    }
+    String phylum;
+    try {
+      phylum = res.getString("phylum");
+    } catch (JSONException e) {
+      phylum = "";
+    }
+
+    Taxon t = new Taxon(id, scientificName, rank, phylum);
+
+    JSONArray aOccGlob = obj.getJSONArray("features");
+    Occurrence[] occGlob = new Occurrence[aOccGlob.length()];
+    int min = Integer.MAX_VALUE;
+    int max = Integer.MIN_VALUE;
+    for (int i = 0; i < aOccGlob.length(); i++) {
+      JSONObject o = aOccGlob.getJSONObject(i);
+      int n = o.getJSONObject("properties").getInt("n");
+      if (n < min) {
+        min = n;
+      }
+      if (n > max) {
+        max = n;
+      }
+      JSONArray coords = o
+              .getJSONObject("geometry")
+              .getJSONArray("coordinates")
+              .getJSONArray(0);
+      JSONArray nw = coords.getJSONArray(1);
+      JSONArray se = coords.getJSONArray(3);
+
+      GeoHash geohash = GeoHash.withCharacterPrecision(
+              (nw.getDouble(1) + se.getDouble(1)) / 2,
+              (nw.getDouble(0) + se.getDouble(0)) / 2,
+              8
+      );
+
+      occGlob[i] = new Occurrence(geohash, n);
+    }
+
+    Occurrences occGlobal = new Occurrences(
+            t,
+            occGlob,
+            min,
+            max,
+            (short) 2000,
+            (short) 2020
+    );
+
+    Occurrences[] occs = { occGlobal };
+
+    try {
+      listener.recoitOccurrencesParBDD(
+              new OccurrencesPartition(t, occs, occGlobal, min, max)
+      );
+    } catch (AuMoins1InteveralleException e) {
+      e.printStackTrace();
+    }
+  }
 
   public void getOccurences(
     String nomEspece,

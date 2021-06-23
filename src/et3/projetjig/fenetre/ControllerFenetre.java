@@ -13,6 +13,7 @@ import et3.projetjig.fenetre.especes.EspecesSelecteur;
 import et3.projetjig.fenetre.especes.EspecesSelecteurListener;
 import et3.projetjig.fenetre.terre.CadreTerre;
 import et3.projetjig.fenetre.terre.CadreTerreListener;
+import et3.util.InactiviteDetect;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -85,26 +86,32 @@ public class ControllerFenetre
         donnees.getDonneesParDefaut();
     }
 
+
+    InactiviteDetect geoHashUserInactiver = new InactiviteDetect(null, 500);
     @Override
     public boolean recoitGeoHashParUser(GeoHash geoHash) {
-        donnees.getObservations(geoHash);
+        geoHashUserInactiver.ping(()-> donnees.getObservations(geoHash) );
         return true;
     }
 
 
+    InactiviteDetect anneeUserInactiver = new InactiviteDetect(null, 500);
     @Override
     public void recoitAnneesParUser(short debutAnnee, short finAnnee) {
         if(mode == MODE_OCCURRENCES) {
-            try {
-                donnees.getOccurences(animateur.getEspece().getNomScientifique(), annees.getDebut(), annees.getFin());
-            } catch(AucuneOccsPartitionException e) { e.printStackTrace(); }
+            anneeUserInactiver.ping(()-> {
+                try {
+                    donnees.getOccurences(animateur.getEspece().getNomScientifique(), annees.getDebut(), annees.getFin());
+                } catch(AucuneOccsPartitionException e) { e.printStackTrace(); }
+            });
         }
     }
 
 
+    InactiviteDetect especeUserInactiver = new InactiviteDetect(null, 500);
     @Override
     public void recoitEspeceParUser(String nom) {
-        donnees.getOccurences(nom, annees.getDebut(), annees.getFin());
+        especeUserInactiver.ping(()-> donnees.getOccurences(nom, annees.getDebut(), annees.getFin()) );
     }
 
 

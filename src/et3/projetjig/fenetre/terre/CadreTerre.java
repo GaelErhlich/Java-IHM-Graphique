@@ -4,6 +4,7 @@ import et3.outils3d.CameraManager;
 import et3.projetjig.donnees.types.Occurrence;
 import et3.projetjig.donnees.types.Occurrences;
 import et3.projetjig.fenetre.terre.sphereterre.SphereTerre;
+import et3.util.InactiviteDetect;
 import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.scene.*;
@@ -160,7 +161,6 @@ public class CadreTerre extends Pane {
         niveau = (short) Math.min(Math.max(niveau, 0),NOMBRE_INTERVALLES-1);
         return niveau;
     }
-
 
 
 
