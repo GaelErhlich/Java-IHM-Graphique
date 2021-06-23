@@ -3,6 +3,9 @@ package et3.projetjig.fenetre.animateurobs.exceptions;
 import et3.projetjig.fenetre.animateurobs.AnimObsPartitionListener;
 import et3.projetjig.fenetre.animateurobs.AnimateurOccsPartition;
 
+/**
+ * Exception lancée lorsqu'aucune OccurrencesPartition n'est disponible mais est nécessaire
+ */
 public class AucuneOccsPartitionException extends Exception {
 
     public AnimObsPartitionListener parent;

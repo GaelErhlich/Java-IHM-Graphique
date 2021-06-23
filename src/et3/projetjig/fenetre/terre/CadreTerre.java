@@ -157,12 +157,25 @@ public class CadreTerre extends Pane {
         }
     }
 
-
+    /**
+     * Génère une couleur JavaFX pour un certain niveau sur l'échelle de ce CadreTerre
+     * @param niveau le niveau dont dépend la couleur (entre 0 et NOMBRE_INTERVALLES-1)
+     * @param transparence le niveau de transparence de la couleur générée
+     * @return la nouvelle couleur
+     */
     private static Color couleurEchellePourNiveau(short niveau, float transparence) {
         float pas = 1.0f / NOMBRE_INTERVALLES;
         return new Color(1.0 - niveau*pas, niveau*pas, 0.0, transparence);
     }
 
+    /**
+     * Détermine l'indice d'une valeur sur l'échelle de ce CadreTerre
+     * @param valeur valeur dont on veut trouver l'indice
+     * @param min valeur minimale possible sur l'échelle
+     * @param max valeur maximale possible sur l'échelle
+     * @param tailleIntervalle taille des plages de valeurs de chaque indice (optionnel)
+     * @return l'indice de la valeur
+     */
     private static short niveauEchellePourValeur(int valeur, int min, int max, Float tailleIntervalle) {
         if(tailleIntervalle == null) {
             tailleIntervalle = ((float)(max - min)) / NOMBRE_INTERVALLES;
@@ -184,17 +197,28 @@ public class CadreTerre extends Pane {
     }
 
 
+    /**
+     * Notifie la fenêtre qu'une nouvelle précision de GeoHash a été demandée par l'utilisateur
+     * @param geoHash le GeoHash actuel avec la nouvelle précision
+     */
     void envoiNouvPrecisionVersFenetre(GeoHash geoHash) {
         fenetre.recoitPrecisionParUser(geoHash);
     }
 
 
-
+    /**
+     * Getter de la SphereTerre correspondante à ce CadreTerre
+     * @return le Group "sphereTerre" contenant le globe
+     */
     public SphereTerre getSphereTerre() {
         return sphereTerre;
     }
 
 
+    /**
+     * Notifie le CadreTerre qu'il doit utiliser un nouveau Geohash
+     * @param geoHash le nouveau GeoHash
+     */
     public void recoitGeoHash(GeoHash geoHash) {
         Platform.runLater(()->{
             sphereTerre.supprimeCarres();
@@ -204,11 +228,18 @@ public class CadreTerre extends Pane {
     }
 
 
+    /**
+     * Getter du GeoHash actuellement sélectionné
+     * @return le GeoHash
+     */
     public GeoHash getGeoHash() {
         return sphereTerre.getGeoHash();
     }
 
 
+    /**
+     * Active le mode histogramme sur le globe
+     */
     public void activeModeHistog() {
         this.estModeHistog = true;
 
@@ -218,6 +249,9 @@ public class CadreTerre extends Pane {
         });
     }
 
+    /**
+     * Désactive le mode histogramme sur le globe (passe en mode carrés à la surface)
+     */
     public void desactiveModeHistog() {
         this.estModeHistog = false;
 
@@ -227,12 +261,21 @@ public class CadreTerre extends Pane {
         });
     }
 
+    /**
+     * Indique si le mode histogramme est actif
+     * @return true si mode histogramme, false si mode carrés à la surface
+     */
     public boolean estHistogramme() {
         return estModeHistog;
     }
 
 
-
+    /**
+     * Notifie le CadreTerre que des Occurrences doivent être affichées
+     * @param occurrences les Occurrences à afficher
+     * @param min la valeur minimale parmi les Occurrence
+     * @param max la valeur maximale parmi les Occurrence
+     */
     public void recoitOccurrences(Occurrences occurrences, int min, int max) {
         Platform.runLater(()->{
 
@@ -251,6 +294,9 @@ public class CadreTerre extends Pane {
     }
 
 
+    /**
+     * Dessine les Occurrence actuellement enregistrées
+     */
     public void dessineOccurrences() {
         if(occurrences != null) {
 
@@ -282,6 +328,9 @@ public class CadreTerre extends Pane {
     }
 
 
+    /**
+     * Notifie ce CadreTerre que les carrés/histogramme doivent être cachés
+     */
     public void recoitCmdDeselectCarresEtHist() {
         Platform.runLater(()-> {
             sphereTerre.supprimeCarres();

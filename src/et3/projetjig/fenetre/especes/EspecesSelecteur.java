@@ -30,7 +30,13 @@ public class EspecesSelecteur extends ListView<String> {
     private String nomScientifique = "";
 
 
-
+    /**
+     *
+     * @param parent composant parent écoutant le sélecteur d'espèces
+     * @param width largeur attendue pour ce composant
+     * @param height hauteur attendue pour ce composant
+     * @param field champ JavaFX dans lequel les noms d'espèces sont tapés
+     */
     public EspecesSelecteur(EspecesSelecteurListener parent, int width, int height, TextField field) {
         this.parent = parent;
         this.field = field;
@@ -44,7 +50,9 @@ public class EspecesSelecteur extends ListView<String> {
     }
 
 
-
+    /**
+     * Initialise les événements de ce composant
+     */
     private void initialiseEvents() {
 
         /* Quand on sélectionne une ligne */
@@ -82,11 +90,13 @@ public class EspecesSelecteur extends ListView<String> {
             parent.recoitEspeceParUser(field.getText());
         });
 
-
-
     }
 
 
+    /**
+     * Met un nouveau mode pour ce composant pour définir son comportement
+     * @param mode code du nouveau mode (ex : MODE_INFO_ESPECE)
+     */
     private void setMode(short mode) {
         this.observations = null;
 
@@ -94,11 +104,19 @@ public class EspecesSelecteur extends ListView<String> {
     }
 
 
+    /**
+     * Getter du nom scientifique actuellement enregistré
+     * @return la String du nom
+     */
     public String getNomScientifique() {
         return nomScientifique;
     }
 
 
+    /**
+     * Notifie ce composant que son parent lui a envoyé une nouvelle espèce à afficher et enregistrer
+     * @param espece la nouvelle espèce
+     */
     public void recoitEspece(Taxon espece) {
         Platform.runLater(()->{
             this.setMode(MODE_INFO_ESPECE);
@@ -115,6 +133,10 @@ public class EspecesSelecteur extends ListView<String> {
     }
 
 
+    /**
+     * Notifie ce composant qu'il doit afficher plusieurs noms d'espèces parmi lesquels choisir
+     * @param especes le tableau de noms d'espèces
+     */
     public void recoitListeEspeces(String[] especes) {
         Platform.runLater(()->{
             setMode(MODE_SELECTION_ESPECE);
@@ -125,6 +147,10 @@ public class EspecesSelecteur extends ListView<String> {
     }
 
 
+    /**
+     * Notifie ce composant que la dernière recherche a échoué et qu'il doit l'afficher
+     * @param nom nom de l'espèce n'ayant pas donné de résultat
+     */
     public void recoitErreurEspece(String nom) {
         Platform.runLater(()->{
             this.setMode(MODE_ERREUR);
@@ -140,6 +166,10 @@ public class EspecesSelecteur extends ListView<String> {
     }
 
 
+    /**
+     * Notifie ce composant qu'il doit afficher des Observation
+     * @param observations le tableau d'Observation
+     */
     public void recoitObservations(Observation[] observations) {
         Platform.runLater(()-> {
             setMode(MODE_OBSERVATIONS);

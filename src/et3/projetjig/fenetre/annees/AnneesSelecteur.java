@@ -27,6 +27,12 @@ public class AnneesSelecteur extends Pane implements Initializable {
     short anneeFin;
 
 
+    /**
+     *
+     * @param parent composant parent écoutant le sélecteur d'année
+     * @param anneeDebut date plus ancienne autorisée
+     * @param anneeFin date plus récente autorisée
+     */
     public AnneesSelecteur(AnneesSelecteurListener parent, short anneeDebut, short anneeFin) {
         this.parent = parent;
         this.anneeDebut = anneeDebut;
@@ -67,11 +73,18 @@ public class AnneesSelecteur extends Pane implements Initializable {
         finSlider.addEventHandler(MouseEvent.MOUSE_RELEASED, (event) -> onFinSliderValue());
     }
 
+    /**
+     * Handler de l'événement de mouvement du slider du début de l'intervalle
+     */
     private void onDebutSliderValue() {
         debutSlider.setValue( Math.min(debutSlider.getValue(), finSlider.getValue()) );
         setDebut( (short)debutSlider.getValue() );
         parent.recoitAnneesParUser(anneeDebut, anneeFin);
     }
+
+    /**
+     * Handler de l'événement de mouvement du slider de la fin de l'intervalle
+     */
     private void onFinSliderValue() {
         finSlider.setValue( Math.max(finSlider.getValue(), debutSlider.getValue()) );
         setFin( (short)finSlider.getValue() );
@@ -79,7 +92,10 @@ public class AnneesSelecteur extends Pane implements Initializable {
     }
 
 
-
+    /**
+     * Setter de l'année au début de l'intervalle
+     * @param annee nouvelle année
+     */
     public void setDebut(short annee) {
         this.anneeDebut = annee;
 
@@ -88,11 +104,20 @@ public class AnneesSelecteur extends Pane implements Initializable {
             debutLabel.setText("Début : "+annee);
         });
     }
+
+    /**
+     * Getter de l'année au début de l'intervalle
+     * @return année de début
+     */
     public short getDebut() {
         return (short)debutSlider.getValue();
     }
 
 
+    /**
+     * Setter de l'année à la fin de l'intervalle
+     * @param annee nouvelle année de fin
+     */
     public void setFin(short annee) {
         this.anneeFin = annee;
 
@@ -101,6 +126,11 @@ public class AnneesSelecteur extends Pane implements Initializable {
             finLabel.setText("Fin : "+annee);
         });
     }
+
+    /**
+     * Getter de l'année à la fin de l'intervalle
+     * @return année de fin
+     */
     public short getFin() {
         return (short)finSlider.getValue();
     }

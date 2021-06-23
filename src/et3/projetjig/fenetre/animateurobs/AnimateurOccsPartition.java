@@ -1,7 +1,6 @@
 package et3.projetjig.fenetre.animateurobs;
 
 import et3.projetjig.donnees.types.OccurrencesPartition;
-import et3.projetjig.donnees.types.Taxon;
 import et3.projetjig.fenetre.animateurobs.exceptions.AucuneOccsPartitionException;
 import et3.projetjig.fenetre.animateurobs.exceptions.NotEnLectureException;
 import javafx.application.Platform;
@@ -19,7 +18,7 @@ public class AnimateurOccsPartition {
 
     private final Button lireBtn;
     private final Button globalBtn;
-    private Button[] btnsDesactivables;
+    private final Button[] btnsDesactivables;
 
 
     private final static short MODE_ATTENTE = 0;
@@ -53,7 +52,9 @@ public class AnimateurOccsPartition {
     }
 
 
-
+    /**
+     * Initialise les événements pour cet animateur d'OccurrencesPartition
+     */
     private void initialiseEvents() {
 
         lireBtn.addEventHandler(MouseEvent.MOUSE_PRESSED, (event -> {
@@ -89,8 +90,10 @@ public class AnimateurOccsPartition {
     }
 
 
-
-
+    /**
+     * Définit le mode comportemental de cet animateur
+     * @param animateurMode un mode parmi ceux disponibles (ex: MODE_LIRE)
+     */
     private void setMode(short animateurMode) {
         if(animateurMode != MODE_LIRE && scheduleActuel != null) {
             scheduleActuel.cancel(true);
@@ -103,6 +106,10 @@ public class AnimateurOccsPartition {
     }
 
 
+    /**
+     * Notifie l'animateur qu'il doit lire une nouvelle OccurrencesPartition
+     * @param occurrencesPartition la nouvelle
+     */
     public void setOccPartition(OccurrencesPartition occurrencesPartition) {
         this.occPartition = occurrencesPartition;
         setMode(MODE_GLOBAL);
@@ -113,15 +120,20 @@ public class AnimateurOccsPartition {
     }
 
 
-    public void desactiveBtnsDesactivables(boolean estInactif) {
+    /**
+     * Active ou désactive les boutons "désactivables"
+     * @param estInactif true si doit désactiver, false si doit activer
+     */
+    private void desactiveBtnsDesactivables(boolean estInactif) {
         for(Button btn : btnsDesactivables) {
             btn.setDisable(estInactif);
         }
     }
 
 
-
-
+    /**
+     * L'animateur envoie l'Occurrences suivante à son composant parent
+     */
     private void envoyerOccurrencesSuiv() {
         Platform.runLater(()->{
             if(scheduleActuel != null) {
@@ -135,6 +147,10 @@ public class AnimateurOccsPartition {
     }
 
 
+    /**
+     * L'animateur passe en MODE_LIRE et déclenche l'animation
+     * @throws AucuneOccsPartitionException si rien à lire
+     */
     public void lire() throws AucuneOccsPartitionException {
         if(mode == MODE_ATTENTE) { throw new AucuneOccsPartitionException(parent, this); }
         setMode(MODE_LIRE);
@@ -160,6 +176,10 @@ public class AnimateurOccsPartition {
     }
 
 
+    /**
+     * L'animateur passe en MODE_PAUSE et arrête l'animation
+     * @throws NotEnLectureException
+     */
     public void pause() throws NotEnLectureException {
         if(mode != MODE_LIRE) { throw new NotEnLectureException(parent, this); }
         setMode(MODE_PAUSE);
@@ -177,6 +197,10 @@ public class AnimateurOccsPartition {
     }
 
 
+    /**
+     * L'animateur repasse en MODE_GLOBAL et affiche les occurrences non-partitionnées
+     * @throws AucuneOccsPartitionException si rien à afficher
+     */
     public void global() throws AucuneOccsPartitionException {
         if(mode == MODE_ATTENTE) { throw new AucuneOccsPartitionException(parent, this); }
         setMode(MODE_GLOBAL);
@@ -198,6 +222,9 @@ public class AnimateurOccsPartition {
     }
 
 
+    /**
+     * Fait repasser l'animateur en MODE_ATTENTE où il ne fait plus rien
+     */
     public void attente() {
         setMode(MODE_ATTENTE);
 

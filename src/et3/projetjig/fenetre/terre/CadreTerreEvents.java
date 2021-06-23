@@ -14,6 +14,11 @@ import kungfoo.geohash.src.main.java.ch.hsr.geohash.GeoHash;
 
 public class CadreTerreEvents {
 
+    /**
+     * Initialise les événements du CadreTerre et de la SphereTerre
+     * @param cadreTerre le CadreTerre concerné
+     * @param histogBtn le bouton JavaFX permettant d'activer/désactiver le mode histogramme
+     */
     public static void declare(CadreTerre cadreTerre, Button histogBtn) {
 
         initialiseEventsClic(cadreTerre);

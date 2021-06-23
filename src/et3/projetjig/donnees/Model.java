@@ -22,6 +22,9 @@ public class Model {
   private final String adresse = "https://api.obis.org/v3/";
   private ControllerFenetre listener = null;
 
+  /**
+   * Fait charger les données par défaut et les envoyer à l'interface
+   */
   public void getDonneesParDefaut() {
     JSONObject obj = JsonReader.readFromFile(
             "src/et3/projetjig/donnees/ressources.json"
@@ -106,6 +109,13 @@ public class Model {
     }
   }
 
+  /**
+   * Charge une OccurrencesPartition pour l'envoyer à l'interface
+   * @param nomEspece Nom (optionnel) de l'espèce à filtrer
+   * @param anneeDebut Année du début du grand intervalle
+   * @param anneeFin Année de fin du grand intervalle
+   * @param precision Précision de Geohash demandé
+   */
   public void getOccurences(
     String nomEspece,
     short anneeDebut,
@@ -345,6 +355,11 @@ public class Model {
     }
   }
 
+  /**
+   * Fait envoyer des Observation à l'interface
+   * @param geoH le GeoHash dont on veut les Observations
+   * @param nom type/espèce à filtrer dans la recherche
+   */
   public void getObservations(GeoHash geoH, String nom) {
     String geoStr = geoH.toBase32();
     URI uri;
@@ -424,6 +439,10 @@ public class Model {
     }
   }
 
+  /**
+   * Définit la fenêtre qui écoute ce Model
+   * @param listener la fenêtre
+   */
   public void setListener(ControllerFenetre listener) {
     this.listener = listener;
   }
