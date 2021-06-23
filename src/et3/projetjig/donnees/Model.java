@@ -88,7 +88,7 @@ public class Model {
           anneeDebut +
           "-01-01&enddate=" +
           anneeFin +
-          "-01-01"
+          "-12-31"
         );
 
         JSONObject oOccGlob = JsonReader.readJsonObjectFromUrl(uri2.toString());
@@ -131,6 +131,10 @@ public class Model {
         );
 
         Occurrences[] occurrences = new Occurrences[(anneeFin - anneeDebut)/5 +1];
+
+
+        int minAllInterv = Integer.MAX_VALUE;
+        int maxAllInterv = Integer.MIN_VALUE;
 
         int anneeFinLocale;
         for (int j = anneeDebut; j <= anneeFin; j += 5) {
@@ -185,10 +189,18 @@ public class Model {
               (short) j,
               (short) anneeFinLocale
             );
+
+          if(min1 < minAllInterv) {
+            minAllInterv = min;
+          }
+          if(max1 > maxAllInterv) {
+            maxAllInterv = max;
+          }
+
         }
         try {
           listener.recoitOccurrencesParBDD(
-            new OccurrencesPartition(t, occurrences, occGlobal, min, max)
+            new OccurrencesPartition(t, occurrences, occGlobal, minAllInterv, maxAllInterv)
           );
         } catch (AuMoins1InteveralleException e) { e.printStackTrace(); }
       } else {

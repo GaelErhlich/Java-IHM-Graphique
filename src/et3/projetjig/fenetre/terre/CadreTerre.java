@@ -193,6 +193,7 @@ public class CadreTerre extends Pane {
             echelleBas.setText( Integer.toString(min) );
             echelleHaut.setText( Integer.toString(max) );
 
+            sphereTerre.deselectionnerLocPrincipale();
             sphereTerre.supprimeCarres();
             sphereTerre.supprimerHistogramme();
 

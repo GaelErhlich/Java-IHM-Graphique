@@ -269,7 +269,7 @@ public class SphereTerre extends Group {
 
     public void recoitHistogramme(Point2D coords2d, int hauteur, int maxHauteur, Color couleur) {
 
-        Cylinder cylinder = new Cylinder(HIST_RAYON_CYLINDRE, (double)HIST_HAUTEUR_MAX*hauteur/maxHauteur);
+        Cylinder cylinder = new Cylinder(HIST_RAYON_CYLINDRE, HIST_HAUTEUR_MAX*hauteur/maxHauteur);
         cylinder.setMaterial(new PhongMaterial(couleur));
         cylinder.getTransforms().addAll(
                 new Rotate(90+TEXTURE_LON_OFFSET-coords2d.getY(), 0, 0, 0, new Point3D(0,1,0)),
