@@ -130,23 +130,21 @@ public class Model {
           anneeFin
         );
 
-        Occurrences[] occurrences = new Occurrences[(anneeFin - anneeDebut) /
-          2 +
-          ((anneeFin - anneeDebut) % 2) ==
-          0
-          ? 0
-          : 1];
+        Occurrences[] occurrences = new Occurrences[(anneeFin - anneeDebut)/5 +1];
 
-        for (int j = anneeDebut + 5; j < anneeFin - 5; j += 5) {
+        int anneeFinLocale;
+        for (int j = anneeDebut; j <= anneeFin; j += 5) {
+          anneeFinLocale = (j + 4 <= anneeFin ? j+4 : anneeFin);
+
           URI uri3 = new URI(
             adresse +
             "occurrence/grid/8?scientificname=" +
             scientificNameParam +
             "&startdate=" +
-            (j - 5) +
-            "-01-01&enddate=" +
             j +
-            "-01-01"
+            "-01-01&enddate=" +
+            anneeFinLocale +
+            "-12-31"
           );
 
           JSONObject oOcc = JsonReader.readJsonObjectFromUrl(uri3.toString());
@@ -178,26 +176,26 @@ public class Model {
             occ[i] = new Occurrence(geohash, n);
           }
 
-          occurrences[j - 5 - anneeDebut] =
+          occurrences[(j-anneeDebut)/5] =
             new Occurrences(
               t,
               occ,
               min1,
               max1,
-              (short) ((short) j - 5),
-              (short) j
+              (short) j,
+              (short) anneeFinLocale
             );
         }
         try {
           listener.recoitOccurrencesParBDD(
             new OccurrencesPartition(t, occurrences, occGlobal, min, max)
           );
-        } catch (AuMoins1InteveralleException e) {}
+        } catch (AuMoins1InteveralleException e) { e.printStackTrace(); }
       } else {
         String[] result = new String[o.length()];
         for (int i = 0; i < o.length(); i++) {
           result[i] = o.getJSONObject(i).getString("scientificName");
-          if (result[i].toLowerCase() == nomEspece.toLowerCase()) {
+          if (result[i].equalsIgnoreCase( nomEspece)) {
             JSONObject res = o.getJSONObject(i);
 
             String scientificName;
