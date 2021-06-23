@@ -2,8 +2,16 @@ package et3.projetjig.donnees;
 
 import et3.jsonReader.JsonReader;
 import et3.projetjig.donnees.types.Observation;
+import et3.projetjig.donnees.types.Occurrence;
+import et3.projetjig.donnees.types.Occurrences;
+import et3.projetjig.donnees.types.OccurrencesPartition;
 import et3.projetjig.donnees.types.Taxon;
+import et3.projetjig.donnees.types.exceptions.AuMoins1InteveralleException;
 import et3.projetjig.fenetre.ControllerFenetre;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import kungfoo.geohash.src.main.java.ch.hsr.geohash.GeoHash;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,74 +29,277 @@ public class Model {
     short anneeDebut,
     short anneeFin
   ) {
-    JSONArray o = JsonReader.readJsonArrayFromUrl(
-      adresse + "taxon/complete/verbose/" + nomEspece
-    );
-    //   "&startdate=" +
-    //   anneeDebut +
-    //   "-01-01&enddate=" +
-    //   anneeFin +
-    //   "-01-01"
-    if (o.length() == 0) {
-      listener.recoitErreurEspece(nomEspece);
-    } else if (o.length() == 1) {
-      JSONObject res = o.getJSONObject(0);
-      String scientificName = res.getString("scientificName");
-      String rank = res.getString("rank");
-      rank = rank == null ? "" : rank;
-      int id = res.getInt("id");
-      String phylum;
-      try { phylum = res.getString("phylum"); } catch(JSONException e) { phylum = ""; }
-      phylum = phylum == null ? "" : phylum;
-
-      Taxon t = new Taxon(id, scientificName, rank, phylum);
-
-      // TODO : Envoyer une OccurrencesPartition, avec donc les occurrences globales sur tout l'intervalle
-      //  de temps, et sur les différents sous-intervalles de 5 ans
-
-    } else {
-      String[] result = new String[o.length()];
-      for (int i = 0; i < o.length(); i++) {
-        result[i] = o.getJSONObject(i).getString("scientificName");
+    try {
+      URI uri;
+      String param;
+      try {
+        param = URLEncoder.encode(nomEspece, "UTF-8");
+        param = param.replace("+", "%20");
+      } catch (UnsupportedEncodingException e) {
+        System.out.println("B");
+        listener.recoitErreurEspece(nomEspece);
+        return;
       }
 
-      listener.recoitEspecesParBDD(result);
+      uri = new URI(adresse + "taxon/complete/verbose/" + param);
+      System.out.println(uri);
+      JSONArray o = JsonReader.readJsonArrayFromUrl(uri.toString());
+
+      if (o.length() == 0) {
+        listener.recoitErreurEspece(nomEspece);
+      } else if (o.length() == 1) {
+        JSONObject res = o.getJSONObject(0);
+
+        String scientificName;
+        try {
+          scientificName = res.getString("scientificName");
+        } catch (JSONException e) {
+          scientificName = "";
+        }
+        String rank;
+        try {
+          rank = res.getString("rank");
+        } catch (JSONException e) {
+          rank = "";
+        }
+
+        int id;
+        try {
+          id = res.getInt("id");
+        } catch (JSONException e) {
+          id = 0;
+        }
+        String phylum;
+        try {
+          phylum = res.getString("phylum");
+        } catch (JSONException e) {
+          phylum = "";
+        }
+
+        Taxon t = new Taxon(id, scientificName, rank, phylum);
+        String scientificNameParam;
+        scientificNameParam = URLEncoder.encode(nomEspece, "UTF-8");
+        scientificNameParam = param.replace("+", "%20");
+        URI uri2 = new URI(
+          adresse +
+          "occurrence/grid/8?scientificname=" +
+          scientificNameParam +
+          "&startdate=" +
+          anneeDebut +
+          "-01-01&enddate=" +
+          anneeFin +
+          "-01-01"
+        );
+
+        JSONObject oOccGlob = JsonReader.readJsonObjectFromUrl(uri2.toString());
+        JSONArray aOccGlob = oOccGlob.getJSONArray("features");
+        Occurrence[] occGlob = new Occurrence[aOccGlob.length()];
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
+        for (int i = 0; i < aOccGlob.length(); i++) {
+          JSONObject obj = aOccGlob.getJSONObject(i);
+          int n = obj.getJSONObject("properties").getInt("n");
+          if (n < min) {
+            min = n;
+          }
+          if (n > max) {
+            max = n;
+          }
+          JSONArray coords = obj
+            .getJSONObject("geometry")
+            .getJSONArray("coordinates")
+            .getJSONArray(0);
+          JSONArray nw = coords.getJSONArray(1);
+          JSONArray se = coords.getJSONArray(3);
+
+          GeoHash geohash = GeoHash.withCharacterPrecision(
+            (nw.getDouble(1) + se.getDouble(1)) / 2,
+            (nw.getDouble(0) + se.getDouble(0)) / 2,
+            8
+          );
+
+          occGlob[i] = new Occurrence(geohash, n);
+        }
+
+        Occurrences occGlobal = new Occurrences(
+          t,
+          occGlob,
+          min,
+          max,
+          anneeDebut,
+          anneeFin
+        );
+
+        Occurrences[] occurrences = new Occurrences[(anneeFin - anneeDebut) /
+          2 +
+          ((anneeFin - anneeDebut) % 2) ==
+          0
+          ? 0
+          : 1];
+
+        for (int j = anneeDebut + 5; j < anneeFin - 5; j += 5) {
+          URI uri3 = new URI(
+            adresse +
+            "occurrence/grid/8?scientificname=" +
+            scientificNameParam +
+            "&startdate=" +
+            (j - 5) +
+            "-01-01&enddate=" +
+            j +
+            "-01-01"
+          );
+
+          JSONObject oOcc = JsonReader.readJsonObjectFromUrl(uri3.toString());
+          JSONArray aOcc = oOcc.getJSONArray("features");
+          Occurrence[] occ = new Occurrence[aOcc.length()];
+          int min1 = Integer.MAX_VALUE;
+          int max1 = Integer.MIN_VALUE;
+          for (int i = 0; i < aOcc.length(); i++) {
+            JSONObject obj = aOcc.getJSONObject(i);
+            int n = obj.getJSONObject("properties").getInt("n");
+            if (n < min1) {
+              min1 = n;
+            }
+            if (n > max1) {
+              max1 = n;
+            }
+            JSONArray coords = obj
+              .getJSONObject("geometry")
+              .getJSONArray("coordinates")
+              .getJSONArray(0);
+            JSONArray nw = coords.getJSONArray(1);
+            JSONArray se = coords.getJSONArray(3);
+            GeoHash geohash = GeoHash.withCharacterPrecision(
+              (nw.getDouble(1) + se.getDouble(1)) / 2,
+              (nw.getDouble(0) + se.getDouble(0)) / 2,
+              8
+            );
+
+            occ[i] = new Occurrence(geohash, n);
+          }
+
+          occurrences[j - 5 - anneeDebut] =
+            new Occurrences(
+              t,
+              occ,
+              min1,
+              max1,
+              (short) ((short) j - 5),
+              (short) j
+            );
+        }
+        try {
+          listener.recoitOccurrencesParBDD(
+            new OccurrencesPartition(t, occurrences, occGlobal, min, max)
+          );
+        } catch (AuMoins1InteveralleException e) {}
+      } else {
+        String[] result = new String[o.length()];
+        for (int i = 0; i < o.length(); i++) {
+          result[i] = o.getJSONObject(i).getString("scientificName");
+          if (result[i].toLowerCase() == nomEspece.toLowerCase()) {
+            JSONObject res = o.getJSONObject(i);
+
+            String scientificName;
+            try {
+              scientificName = res.getString("scientificName");
+            } catch (JSONException e) {
+              scientificName = "";
+            }
+            String rank;
+            try {
+              rank = res.getString("rank");
+            } catch (JSONException e) {
+              rank = "";
+            }
+
+            int id;
+            try {
+              id = res.getInt("id");
+            } catch (JSONException e) {
+              id = 0;
+            }
+            String phylum;
+            try {
+              phylum = res.getString("phylum");
+            } catch (JSONException e) {
+              phylum = "";
+            }
+
+            Taxon t = new Taxon(id, scientificName, rank, phylum);
+          }
+        }
+
+        listener.recoitEspecesParBDD(result);
+      }
+    } catch (URISyntaxException e1) {
+      listener.recoitErreurEspece(nomEspece);
+      System.out.println("A");
+    } catch (UnsupportedEncodingException e1) {
+      listener.recoitErreurEspece(nomEspece);
+      System.out.println("C");
     }
   }
 
   public void getObservations(GeoHash geoH) {
     String geoStr = geoH.toBase32();
-    JSONObject o = JsonReader.readJsonObjectFromUrl(
-      adresse + "occurence?geometry=" + geoStr
-    );
-    JSONArray a = o.getJSONArray("results");
+    URI uri;
+    try {
+      uri = new URI(adresse + "occurrence?geometry=" + geoStr);
+      JSONObject o = JsonReader.readJsonObjectFromUrl(uri.toString());
+      JSONArray a = o.getJSONArray("results");
 
-    Observation[] obs = new Observation[a.length()];
+      Observation[] obs = new Observation[a.length()];
 
-    for (int i = 0; i < a.length(); i++) {
-      JSONObject obj = a.getJSONObject(i);
-      String nomScientifique = obj.getString("scientificName");
-      nomScientifique = nomScientifique == null ? "" : nomScientifique;
-      String nomEspece = obj.getString("species");
-      nomEspece = nomEspece == null ? "" : nomEspece;
-      String ordre = obj.getString("order");
-      ordre = ordre == null ? "" : ordre;
-      String superClasse = obj.getString("superclass");
-      superClasse = superClasse == null ? "" : superClasse;
-      String origineEnregistrement = obj.getString("recordedBy");
-      origineEnregistrement =
-        origineEnregistrement == null ? "" : origineEnregistrement;
-      obs[i] =
-        new Observation(
-          nomScientifique,
-          nomEspece,
-          ordre,
-          superClasse,
-          origineEnregistrement
-        );
+      for (int i = 0; i < a.length(); i++) {
+        JSONObject obj = a.getJSONObject(i);
+        String nomScientifique;
+        try {
+          nomScientifique = obj.getString("scientificName");
+        } catch (JSONException e) {
+          nomScientifique = "";
+        }
+        String nomEspece;
+        try {
+          nomEspece = obj.getString("species");
+        } catch (JSONException e) {
+          nomEspece = "";
+        }
+        String ordre;
+        try {
+          ordre = obj.getString("order");
+        } catch (JSONException e) {
+          ordre = "";
+        }
+
+        String superClasse;
+        try {
+          superClasse = obj.getString("superclass");
+        } catch (JSONException e) {
+          superClasse = "";
+        }
+
+        String origineEnregistrement;
+        try {
+          origineEnregistrement = obj.getString("recordedBy");
+        } catch (JSONException e) {
+          origineEnregistrement = "";
+        }
+
+        obs[i] =
+          new Observation(
+            nomScientifique,
+            nomEspece,
+            ordre,
+            superClasse,
+            origineEnregistrement
+          );
+      }
+
+      listener.recoitObservationsParBDD(geoH, obs);
+    } catch (URISyntaxException e) {
+      e.printStackTrace();
     }
-
-    listener.recoitObservationsParBDD(geoH, obs);
   }
 
   public void setListener(ControllerFenetre listener) {
