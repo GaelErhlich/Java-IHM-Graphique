@@ -60,8 +60,8 @@ public class CadreTerreEvents {
         cadreTerre.addEventHandler(ScrollEvent.SCROLL, event -> {
             if(event.isShiftDown()) {
                 try {
-                    int nombreDeBits = terre.getNombreDeBits() + (int)(event.getDeltaX()/30);
-                    nombreDeBits = Math.min(Math.max(nombreDeBits, 0),60) /5 *5;
+                    int nombreDeBits = terre.getNombreDeBits() + (int)(event.getDeltaX()/30)*5;
+                    nombreDeBits = Math.min(Math.max(nombreDeBits, 0),60);
                     System.out.println(nombreDeBits);
                     Point2D latEtLon = terre.getLocPrincipaleCoords2d();
                     GeoHash nouvGeoHash = GeoHash.withBitPrecision(latEtLon.getX(), latEtLon.getY(), nombreDeBits);

@@ -1,6 +1,6 @@
 package et3.projetjig.fenetre.annees;
 
-import javafx.beans.value.ObservableValue;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -82,8 +82,11 @@ public class AnneesSelecteur extends Pane implements Initializable {
 
     public void setDebut(short annee) {
         this.anneeDebut = annee;
-        debutSlider.setValue(annee);
-        debutLabel.setText("Début : "+annee);
+
+        Platform.runLater(()->{
+            debutSlider.setValue(annee);
+            debutLabel.setText("Début : "+annee);
+        });
     }
     public short getDebut() {
         return (short)debutSlider.getValue();
@@ -92,8 +95,11 @@ public class AnneesSelecteur extends Pane implements Initializable {
 
     public void setFin(short annee) {
         this.anneeFin = annee;
-        finSlider.setValue(annee);
-        finLabel.setText("Fin : "+annee);
+
+        Platform.runLater(()-> {
+            finSlider.setValue(annee);
+            finLabel.setText("Fin : "+annee);
+        });
     }
     public short getFin() {
         return (short)finSlider.getValue();

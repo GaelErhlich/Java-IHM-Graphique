@@ -127,12 +127,15 @@ public class AnimateurOccsPartition {
         scheduleActuel = execService.scheduleAtFixedRate(this::envoyerOccurrencesSuiv,
                 PERIODE_ANIMATION, PERIODE_ANIMATION, TimeUnit.MILLISECONDS);
 
-        lireBtn.setText("Pauser évolution ("
-                +occPartition.actuelle().getAnneeDebut()+"-"+occPartition.actuelle().getAnneeFin()+")");
-        lireBtn.setDisable(false);
-        globalBtn.setText("Occurrences globales ("
-                +occPartition.getAnneeDebut()+"-"+occPartition.getAnneeFin()+")");
-        globalBtn.setDisable(false);
+        Platform.runLater(()->{
+            lireBtn.setText("Pauser évolution ("
+                    +occPartition.actuelle().getAnneeDebut()+"-"+occPartition.actuelle().getAnneeFin()+")");
+            lireBtn.setDisable(false);
+            globalBtn.setText("Occurrences globales ("
+                    +occPartition.getAnneeDebut()+"-"+occPartition.getAnneeFin()+")");
+            globalBtn.setDisable(false);
+        });
+
 
     }
 
@@ -141,12 +144,16 @@ public class AnimateurOccsPartition {
         if(mode != MODE_LIRE) { throw new NotEnLectureException(parent, this); }
         setMode(MODE_PAUSE);
 
-        lireBtn.setText("Lire évolution ("
-                +occPartition.getAnneeDebut()+"-"+occPartition.getAnneeFin()+")");
-        lireBtn.setDisable(false);
-        globalBtn.setText("Occurrences globales ("
-                +occPartition.getAnneeDebut()+"-"+occPartition.getAnneeFin()+")");
-        globalBtn.setDisable(false);
+
+        Platform.runLater(()->{
+            lireBtn.setText("Lire évolution ("
+                    +occPartition.getAnneeDebut()+"-"+occPartition.getAnneeFin()+")");
+            lireBtn.setDisable(false);
+            globalBtn.setText("Occurrences globales ("
+                    +occPartition.getAnneeDebut()+"-"+occPartition.getAnneeFin()+")");
+            globalBtn.setDisable(false);
+        });
+
     }
 
 
@@ -158,12 +165,16 @@ public class AnimateurOccsPartition {
         parent.recoitOccurrencesParAnim(occPartition.getOccsGlobales(),
                 occPartition.getMinGlobales(), occPartition.getMaxGlobales());
 
-        lireBtn.setText("Lire évolution ("
-                +occPartition.getAnneeDebut()+"-"+occPartition.getAnneeFin()+")");
-        lireBtn.setDisable(false);
-        globalBtn.setText("Occurrences globales ("
-                +occPartition.getAnneeDebut()+"-"+occPartition.getAnneeFin()+")");
-        globalBtn.setDisable(true);
+
+        Platform.runLater(()->{
+            lireBtn.setText("Lire évolution ("
+                    +occPartition.getAnneeDebut()+"-"+occPartition.getAnneeFin()+")");
+            lireBtn.setDisable(false);
+            globalBtn.setText("Occurrences globales ("
+                    +occPartition.getAnneeDebut()+"-"+occPartition.getAnneeFin()+")");
+            globalBtn.setDisable(true);
+        });
+
     }
 
 
@@ -172,10 +183,13 @@ public class AnimateurOccsPartition {
 
         occPartition = null;
 
-        lireBtn.setText("Lire évolution ( - )");
-        lireBtn.setDisable(true);
-        globalBtn.setText("Occurrences globales ( - )");
-        globalBtn.setDisable(true);
+        Platform.runLater(()->{
+            lireBtn.setText("Lire évolution ( - )");
+            lireBtn.setDisable(true);
+            globalBtn.setText("Occurrences globales ( - )");
+            globalBtn.setDisable(true);
+        });
+
     }
 
 

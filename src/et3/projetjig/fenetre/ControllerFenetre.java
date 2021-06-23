@@ -68,7 +68,7 @@ public class ControllerFenetre
         pane3dAnchor.getChildren().add(terre);
 
         // Mise du sélecteur d'année (composant graphique AnneesSelecteur)
-        annees = new AnneesSelecteur(this, (short)1980, (short)2020);
+        annees = new AnneesSelecteur(this, (short)1950, (short)2020);
         paneAnnees.getChildren().add(annees);
 
         // Mise du sélecteur d'espèce

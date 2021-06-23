@@ -118,13 +118,11 @@ public class Model {
         param = URLEncoder.encode(nomEspece, "UTF-8");
         param = param.replace("+", "%20");
       } catch (UnsupportedEncodingException e) {
-        System.out.println("B");
         listener.recoitErreurEspece(nomEspece);
         return;
       }
 
       uri = new URI(adresse + "taxon/complete/verbose/" + param);
-      System.out.println(uri);
       JSONArray o = JsonReader.readJsonArrayFromUrl(uri.toString());
 
       if (o.length() == 0) {
@@ -341,10 +339,8 @@ public class Model {
       }
     } catch (URISyntaxException e1) {
       listener.recoitErreurEspece(nomEspece);
-      System.out.println("A");
     } catch (UnsupportedEncodingException e1) {
       listener.recoitErreurEspece(nomEspece);
-      System.out.println("C");
     }
   }
 
