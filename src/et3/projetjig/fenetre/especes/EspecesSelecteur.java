@@ -54,7 +54,9 @@ public class EspecesSelecteur extends ListView<String> {
                 if (event.getClickCount() >= 2) {
                     int indice = this.getSelectionModel().getSelectedIndices().get(0);
                     if(indice != 0) {
-                        parent.recoitEspeceParUser( this.getSelectionModel().getSelectedItem() );
+                        String nom = this.getSelectionModel().getSelectedItem();
+                        field.setText(nom);
+                        parent.recoitEspeceParUser(nom);
                     }
                 }
             }
@@ -64,7 +66,9 @@ public class EspecesSelecteur extends ListView<String> {
                 if (event.getClickCount() >= 2) {
                     try {
                         int indice = this.getSelectionModel().getSelectedIndices().get(0);
-                        parent.recoitEspeceParUser( observations[indice-1].getNomScientifique() );
+                        String nom = observations[indice-1].getNomScientifique();
+                        field.setText(nom);
+                        parent.recoitEspeceParUser(nom);
                     } catch(IndexOutOfBoundsException ignored) {}
                 }
             }

@@ -4,13 +4,15 @@ import et3.projetjig.donnees.types.OccurrencesPartition;
 import et3.projetjig.donnees.types.Taxon;
 import et3.projetjig.fenetre.animateurobs.exceptions.AucuneOccsPartitionException;
 import et3.projetjig.fenetre.animateurobs.exceptions.NotEnLectureException;
+import javafx.application.Platform;
 import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 
 import java.util.concurrent.*;
 
 public class AnimateurOccsPartition {
 
-    public final static int PERIODE_ANIMATION = 2000;
+    public final static int PERIODE_ANIMATION = 1000;
 
 
     AnimObsPartitionListener parent;
@@ -26,7 +28,7 @@ public class AnimateurOccsPartition {
     private short mode = MODE_ATTENTE;
 
     private OccurrencesPartition occPartition = null;
-    private ScheduledExecutorService execService = Executors.newSingleThreadScheduledExecutor();
+    private final ScheduledExecutorService execService = Executors.newSingleThreadScheduledExecutor();
     ScheduledFuture scheduleActuel = null;
 
 
@@ -35,10 +37,56 @@ public class AnimateurOccsPartition {
 
         this.lireBtn = lireBtn;
         this.globalBtn = globalBtn;
+
+        attente();
+
+        initialiseEvents();
     }
 
 
+
+    private void initialiseEvents() {
+
+        lireBtn.addEventHandler(MouseEvent.MOUSE_PRESSED, (event -> {
+            try {
+
+                if(mode == MODE_GLOBAL) {
+                    lire();
+                } else if(mode == MODE_LIRE) {
+                    pause();
+                } else if(mode == MODE_PAUSE) {
+                    lire();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }));
+
+
+        globalBtn.addEventHandler(MouseEvent.MOUSE_PRESSED, (event -> {
+            try {
+
+                if(mode == MODE_LIRE || mode == MODE_PAUSE) {
+                    global();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }));
+
+    }
+
+
+
+
     private void setMode(short animateurMode) {
+        if(animateurMode != MODE_LIRE && scheduleActuel != null) {
+            scheduleActuel.cancel(true);
+            scheduleActuel = null;
+        }
+
         mode = animateurMode;
     }
 
@@ -55,8 +103,13 @@ public class AnimateurOccsPartition {
 
 
     private void envoyerOccurrencesSuiv() {
-        parent.recoitOccurrencesParAnim(occPartition.suivant(),
-                occPartition.getMinPourInterv(), occPartition.getMaxPourInterv());
+        Platform.runLater(()->{
+            parent.recoitOccurrencesParAnim(occPartition.suivant(),
+                    occPartition.getMinPourInterv(), occPartition.getMaxPourInterv());
+
+            lireBtn.setText("Pauser évolution ("
+                    +occPartition.actuelle().getAnneeDebut()+"-"+occPartition.actuelle().getAnneeFin()+")");
+        });
     }
 
 
@@ -72,6 +125,13 @@ public class AnimateurOccsPartition {
         scheduleActuel = execService.scheduleAtFixedRate(this::envoyerOccurrencesSuiv,
                 PERIODE_ANIMATION, PERIODE_ANIMATION, TimeUnit.MILLISECONDS);
 
+        lireBtn.setText("Pauser évolution ("
+                +occPartition.actuelle().getAnneeDebut()+"-"+occPartition.actuelle().getAnneeFin()+")");
+        lireBtn.setDisable(false);
+        globalBtn.setText("Occurrences globales ("
+                +occPartition.getAnneeDebut()+"-"+occPartition.getAnneeFin()+")");
+        globalBtn.setDisable(false);
+
     }
 
 
@@ -79,7 +139,12 @@ public class AnimateurOccsPartition {
         if(mode != MODE_LIRE) { throw new NotEnLectureException(parent, this); }
         setMode(MODE_PAUSE);
 
-        scheduleActuel.cancel(false);
+        lireBtn.setText("Lire évolution ("
+                +occPartition.getAnneeDebut()+"-"+occPartition.getAnneeFin()+")");
+        lireBtn.setDisable(false);
+        globalBtn.setText("Occurrences globales ("
+                +occPartition.getAnneeDebut()+"-"+occPartition.getAnneeFin()+")");
+        globalBtn.setDisable(false);
     }
 
 
@@ -89,7 +154,27 @@ public class AnimateurOccsPartition {
 
         parent.recoitOccurrencesParAnim(occPartition.getOccsGlobales(),
                 occPartition.getMinGlobales(), occPartition.getMaxGlobales());
+
+        lireBtn.setText("Lire évolution ("
+                +occPartition.getAnneeDebut()+"-"+occPartition.getAnneeFin()+")");
+        lireBtn.setDisable(false);
+        globalBtn.setText("Occurrences globales ("
+                +occPartition.getAnneeDebut()+"-"+occPartition.getAnneeFin()+")");
+        globalBtn.setDisable(true);
     }
+
+
+    public void attente() {
+        setMode(MODE_ATTENTE);
+
+        occPartition = null;
+
+        lireBtn.setText("Lire évolution ( - )");
+        lireBtn.setDisable(true);
+        globalBtn.setText("Occurrences globales ( - )");
+        globalBtn.setDisable(true);
+    }
+
 
 
     public Taxon getEspece() throws AucuneOccsPartitionException {

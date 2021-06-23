@@ -132,6 +132,8 @@ public class ControllerFenetre
     public void recoitObservationsParBDD(GeoHash geoHash, Observation[] obs) {
         setMode(MODE_OBSERVATIONS);
 
+        animateur.attente();
+        terre.recoitCmdDeselectCarres();
         especes.recoitObservations(obs);
         terre.recoitGeoHash(geoHash);
     }
@@ -142,5 +144,10 @@ public class ControllerFenetre
 
         especes.recoitEspece(occurrences.getEspece());
         terre.recoitOccurrences(occurrences, min, max);
+    }
+
+    @Override
+    public void recoitDeselectOccsParAnim() {
+        terre.recoitCmdDeselectCarres();
     }
 }

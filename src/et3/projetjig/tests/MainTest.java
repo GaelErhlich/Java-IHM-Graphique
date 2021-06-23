@@ -79,10 +79,10 @@ public class MainTest extends Application {
                             new Occurrence(GeoHash.fromGeohashString("rs"), 47),
                     }, 15, 150, (short)2009, (short)2020),
                     30,
-                    150
+                    175
             ));
             /*fenetre.recoitErreurEspece("Gorgus");
-            fenetre.recoitObservationsParBDD(new Observation[] {
+            fenetre.recoitObservationsParBDD(GeoHash.fromGeohashString("sp"), new Observation[] {
                     new Observation("Geogus", "Joe", "3ème", "TS1", "Centre National pour la Recherche Scientifique"),
                     new Observation("Geogus", "Joe", "3ème", "TS1", "Centre National pour la Recherche Scientifique"),
                     new Observation("Geogus", "Joe", "3ème", "TS1", "Le LRI, et oui !"),

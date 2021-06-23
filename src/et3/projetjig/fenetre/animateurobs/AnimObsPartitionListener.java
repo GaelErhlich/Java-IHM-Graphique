@@ -6,4 +6,6 @@ public interface AnimObsPartitionListener {
 
     void recoitOccurrencesParAnim(Occurrences occurrences, int min, int max);
 
+    void recoitDeselectOccsParAnim();
+
 }

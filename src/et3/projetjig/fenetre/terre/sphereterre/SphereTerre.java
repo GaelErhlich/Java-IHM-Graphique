@@ -3,6 +3,7 @@ package et3.projetjig.fenetre.terre.sphereterre;
 import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import et3.maths.CoordonneesConvert;
+import et3.maths.Transformations3D;
 import et3.projetjig.fenetre.terre.sphereterre.exceptions.NullLocalisationPrincipale;
 import javafx.application.Platform;
 import javafx.geometry.Point2D;
@@ -12,6 +13,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.*;
+import javafx.scene.transform.Affine;
+import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Translate;
 import kungfoo.geohash.src.main.java.ch.hsr.geohash.BoundingBox;
 import kungfoo.geohash.src.main.java.ch.hsr.geohash.GeoHash;
 import kungfoo.geohash.src.main.java.ch.hsr.geohash.WGS84Point;
@@ -24,6 +28,10 @@ public class SphereTerre extends Group {
     public final static double PAS_CARRES = 10;
     public final static double CARRES_RAYON = 1.02;
     public final static double LOCALISATION_RAYON = 0.02;
+
+    public final static double HIST_RAYON_CYLINDRE = 0.005;
+    public final static double HIST_RAYON_TERRE = 1.0;
+    public final static double HIST_HAUTEUR_MAX = 0.5;
 
     public final static double TEXTURE_LAT_OFFSET = 0.0;
     public final static double TEXTURE_LON_OFFSET = -2.8;
@@ -60,7 +68,6 @@ public class SphereTerre extends Group {
         this.getChildren().add(localisationPrincipale);
         this.getChildren().add(localisations);
         this.getChildren().add(histogramme);
-
 
     }
 
@@ -135,7 +142,6 @@ public class SphereTerre extends Group {
     }
 
     public void ajouterGeoHash(GeoHash geoHash, Color color) {
-        // TODO
         PhongMaterial material = new PhongMaterial( color );
         BoundingBox box = geoHash.getBoundingBox();
 
@@ -260,20 +266,24 @@ public class SphereTerre extends Group {
     }
 
 
-    // TODO màj de l'histogramme à partir d'un tableau de données
-    public void recoitHistogramme() {
 
+    public void recoitHistogramme(Point2D coords2d, int hauteur, int maxHauteur, Color couleur) {
+
+        Cylinder cylinder = new Cylinder(HIST_RAYON_CYLINDRE, (double)HIST_HAUTEUR_MAX*hauteur/maxHauteur);
+        cylinder.setMaterial(new PhongMaterial(couleur));
+        cylinder.getTransforms().addAll(
+                new Rotate(90+TEXTURE_LON_OFFSET-coords2d.getY(), 0, 0, 0, new Point3D(0,1,0)),
+                new Rotate(90+TEXTURE_LAT_OFFSET+coords2d.getX(), 0, 0, 0, new Point3D(0,0,1)),
+                new Translate(0,1,0)
+        );
+
+        histogramme.getChildren().add(cylinder);
     }
 
 
 
-    public void desactiverHistogramme() {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                histogramme.getChildren().clear();
-            }
-        });
+    public void supprimerHistogramme() {
+        histogramme.getChildren().clear();
     }
 
 

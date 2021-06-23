@@ -7,6 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
@@ -58,19 +59,26 @@ public class AnneesSelecteur extends Pane implements Initializable {
 
 
         // Sélection d'un nouveau début
-        debutSlider.valueProperty().addListener( (ObservableValue<? extends Number> observableValue, Number number, Number t1) -> {
-            debutSlider.setValue( Math.min(t1.doubleValue(), finSlider.getValue()) );
-            setDebut( (short)debutSlider.getValue() );
-            parent.recoitAnneesParUser(anneeDebut, anneeFin);
-        });
+        debutSlider.addEventHandler(MouseEvent.MOUSE_DRAGGED, (event) -> onDebutSliderValue());
+        debutSlider.addEventHandler(MouseEvent.MOUSE_RELEASED, (event) -> onDebutSliderValue());
 
         // Sélection d'une nouvelle fin
-        finSlider.valueProperty().addListener( (ObservableValue<? extends Number> observableValue, Number number, Number t1) -> {
-            finSlider.setValue( Math.max(t1.doubleValue(), debutSlider.getValue()) );
-            setFin( (short)finSlider.getValue() );
-            parent.recoitAnneesParUser(anneeDebut, anneeFin);
-        });
+        finSlider.addEventHandler(MouseEvent.MOUSE_DRAGGED, (event) -> onFinSliderValue());
+        finSlider.addEventHandler(MouseEvent.MOUSE_RELEASED, (event) -> onFinSliderValue());
     }
+
+    private void onDebutSliderValue() {
+        debutSlider.setValue( Math.min(debutSlider.getValue(), finSlider.getValue()) );
+        setDebut( (short)debutSlider.getValue() );
+        parent.recoitAnneesParUser(anneeDebut, anneeFin);
+    }
+    private void onFinSliderValue() {
+        finSlider.setValue( Math.max(finSlider.getValue(), debutSlider.getValue()) );
+        setFin( (short)finSlider.getValue() );
+        parent.recoitAnneesParUser(anneeDebut, anneeFin);
+    }
+
+
 
     public void setDebut(short annee) {
         this.anneeDebut = annee;

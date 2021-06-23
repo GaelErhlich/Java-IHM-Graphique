@@ -15,13 +15,8 @@
          <children>
             <AnchorPane>
                <children>
-                  <HBox>
-                     <children>
-                        <Button maxHeight="25.0" maxWidth="25.0" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" text="+" />
-                        <Button maxHeight="25.0" maxWidth="25.0" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" text="-" />
-                     </children>
-                  </HBox>
-                  <HBox AnchorPane.leftAnchor="80.0">
+                  <HBox />
+                  <HBox AnchorPane.leftAnchor="20.0">
                      <children>
                         <Button fx:id="lireBtn" mnemonicParsing="false" text="Lire évolution occurrences ( - )" />
                         <Button fx:id="globalBtn" mnemonicParsing="false" text="Global" />

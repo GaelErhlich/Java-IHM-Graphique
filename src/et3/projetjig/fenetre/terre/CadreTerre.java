@@ -5,10 +5,15 @@ import et3.projetjig.donnees.types.Occurrence;
 import et3.projetjig.donnees.types.Occurrences;
 import et3.projetjig.fenetre.terre.sphereterre.SphereTerre;
 import javafx.application.Platform;
+import javafx.geometry.Point2D;
 import javafx.scene.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
+import kungfoo.geohash.src.main.java.ch.hsr.geohash.BoundingBox;
 import kungfoo.geohash.src.main.java.ch.hsr.geohash.GeoHash;
+import kungfoo.geohash.src.main.java.ch.hsr.geohash.WGS84Point;
 
 public class CadreTerre extends Pane {
 
@@ -34,6 +39,20 @@ public class CadreTerre extends Pane {
      * Le Group qui contient la SubScene
      */
     private Group parentSubScene;
+    /**
+     * Le groupe qui contient les légendes
+     */
+    private Group legendes = new Group();
+    /**
+     * Valeur maximale de l'échelle en haut à gauche
+     */
+    private Text echelleHaut;
+    /**
+     * Valeur minimale de l'échelle en haut à gauche
+     */
+    private Text echelleBas;
+
+
 
     private Camera camera;
     private CameraManager cameraManager;
@@ -53,8 +72,27 @@ public class CadreTerre extends Pane {
         this.initialiseCamera();
         this.initialiseEclairageTerre();
 
+
+        // Echelle
+        Rectangle rect;
+        for(short i = (short)(NOMBRE_INTERVALLES-1); i >= 0; i--) {
+            rect = new Rectangle(10,10 + i*10,10,10);
+            rect.setFill( couleurEchellePourNiveau(i, 1.0f) );
+            this.legendes.getChildren().add(rect);
+        }
+        echelleHaut = new Text(25, 15, "Maximum");
+        echelleBas = new Text(25, 15 + 10*NOMBRE_INTERVALLES, "Minimum");
+        echelleHaut.setFill(Color.WHITE);
+        echelleBas.setFill(Color.WHITE);
+        this.legendes.getChildren().add(echelleHaut);
+        this.legendes.getChildren().add(echelleBas);
+
+
+
         // Déclaration des événements
         CadreTerreEvents.declare(this);
+
+
 
     }
 
@@ -77,6 +115,8 @@ public class CadreTerre extends Pane {
         this.getChildren().add(parentSubScene);
 
         subScene.setFill(Color.BLACK);
+
+        this.getChildren().add(legendes);
     }
 
     /**
@@ -107,11 +147,16 @@ public class CadreTerre extends Pane {
     }
 
 
-    private static Color couleurEchellePourNiveau(short niveau) {
-        return new Color(1.0 - niveau*0.125, niveau*0.125, 0.0, 0.1);
+    private static Color couleurEchellePourNiveau(short niveau, float transparence) {
+        float pas = 1.0f / NOMBRE_INTERVALLES;
+        return new Color(1.0 - niveau*pas, niveau*pas, 0.0, transparence);
     }
 
     private static short niveauEchellePourValeur(int valeur, int min, int max, Float tailleIntervalle) {
+        if(tailleIntervalle == null) {
+            tailleIntervalle = ((float)(max - min)) / NOMBRE_INTERVALLES;
+        }
+
         short niveau = (short)( (valeur - min) / tailleIntervalle);
         niveau = (short) Math.min(Math.max(niveau, 0),NOMBRE_INTERVALLES-1);
         return niveau;
@@ -145,15 +190,29 @@ public class CadreTerre extends Pane {
     public void recoitOccurrences(Occurrences occurrences, int min, int max) {
         Platform.runLater(()->{
 
+            echelleBas.setText( Integer.toString(min) );
+            echelleHaut.setText( Integer.toString(max) );
+
             sphereTerre.supprimeCarres();
+            sphereTerre.supprimerHistogramme();
 
             float tailleInterv = ((float)(max - min)) / NOMBRE_INTERVALLES;
 
             for(Occurrence occ : occurrences.getOccurrences()) {
                 short niveau = niveauEchellePourValeur(occ.getNombreOccu(), min, max, tailleInterv);
-                sphereTerre.ajouterGeoHash(occ.getGeohash(), couleurEchellePourNiveau(niveau));
+
+                sphereTerre.ajouterGeoHash(occ.getGeohash(), couleurEchellePourNiveau(niveau, 0.1f));
+
+                WGS84Point box = occ.getGeohash().getBoundingBoxCenter();
+                sphereTerre.recoitHistogramme(new Point2D(box.getLatitude(), box.getLongitude()),
+                        occ.getNombreOccu(), max, couleurEchellePourNiveau(niveau, 1.0f));
             }
         });
-
     }
+
+
+    public void recoitCmdDeselectCarres() {
+        Platform.runLater(()-> sphereTerre.supprimeCarres() );
+    }
+
 }

@@ -6,6 +6,7 @@ import et3.projetjig.donnees.types.Taxon;
 import et3.projetjig.fenetre.ControllerFenetre;
 import kungfoo.geohash.src.main.java.ch.hsr.geohash.GeoHash;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Model {
@@ -36,10 +37,15 @@ public class Model {
       String rank = res.getString("rank");
       rank = rank == null ? "" : rank;
       int id = res.getInt("id");
-      String phylum = res.getString("phylum");
+      String phylum;
+      try { phylum = res.getString("phylum"); } catch(JSONException e) { phylum = ""; }
       phylum = phylum == null ? "" : phylum;
 
       Taxon t = new Taxon(id, scientificName, rank, phylum);
+
+      // TODO : Envoyer une OccurrencesPartition, avec donc les occurrences globales sur tout l'intervalle
+      //  de temps, et sur les différents sous-intervalles de 5 ans
+
     } else {
       String[] result = new String[o.length()];
       for (int i = 0; i < o.length(); i++) {
