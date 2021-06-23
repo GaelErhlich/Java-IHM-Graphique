@@ -4,7 +4,6 @@ import et3.outils3d.CameraManager;
 import et3.projetjig.donnees.types.Occurrence;
 import et3.projetjig.donnees.types.Occurrences;
 import et3.projetjig.fenetre.terre.sphereterre.SphereTerre;
-import et3.util.InactiviteDetect;
 import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.scene.*;
@@ -42,15 +41,15 @@ public class CadreTerre extends Pane {
     /**
      * Le groupe qui contient les légendes
      */
-    private Group legendes = new Group();
+    private final Group legendes = new Group();
     /**
      * Valeur maximale de l'échelle en haut à gauche
      */
-    private Text echelleHaut;
+    private final Text echelleHaut;
     /**
      * Valeur minimale de l'échelle en haut à gauche
      */
-    private Text echelleBas;
+    private final Text echelleBas;
 
 
 
@@ -168,8 +167,13 @@ public class CadreTerre extends Pane {
      * Notifie la fenêtre qu'un nouveau GeoHash a été demandé par l'utilisateur
      * @param geoHash le Geohash qui va être envoyé à la fenêtre
      */
-    boolean envoiNouvGeoHashVersFenetre(GeoHash geoHash) {
-        return fenetre.recoitGeoHashParUser(geoHash);
+    void envoiNouvGeoHashVersFenetre(GeoHash geoHash) {
+        fenetre.recoitGeoHashParUser(geoHash);
+    }
+
+
+    void envoiNouvPrecisionVersFenetre(GeoHash geoHash) {
+        fenetre.recoitPrecisionParUser(geoHash);
     }
 
 
@@ -187,6 +191,10 @@ public class CadreTerre extends Pane {
         });
     }
 
+
+    public GeoHash getGeoHash() {
+        return sphereTerre.getGeoHash();
+    }
 
 
 
@@ -207,9 +215,11 @@ public class CadreTerre extends Pane {
 
                 sphereTerre.ajouterGeoHash(occ.getGeohash(), couleurEchellePourNiveau(niveau, 0.1f));
 
-                WGS84Point box = occ.getGeohash().getBoundingBoxCenter();
-                sphereTerre.recoitHistogramme(new Point2D(box.getLatitude(), box.getLongitude()),
+                //WGS84Point box = occ.getGeohash().getBoundingBoxCenter();
+                /*sphereTerre.recoitHistogramme(new Point2D(box.getLatitude(), box.getLongitude()),
                         occ.getNombreOccu(), max, couleurEchellePourNiveau(niveau, 1.0f));
+
+                 */
             }
         });
     }

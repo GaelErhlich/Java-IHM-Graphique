@@ -109,10 +109,34 @@ public class ControllerFenetre
 
     InactiviteDetect geoHashUserInactiver = new InactiviteDetect(null, 500);
     @Override
-    public boolean recoitGeoHashParUser(GeoHash geoHash) {
+    public void recoitPrecisionParUser(GeoHash geoHash) {
+
+        if(mode == MODE_OBSERVATIONS || mode == MODE_INACTIF) {
+            setChargementTxt("Chargement des observations sur "+geoHash.toBase32()+"...");
+            geoHashUserInactiver.ping(()-> donnees.getObservations(geoHash) );
+        }
+
+
+        else if(mode == MODE_OCCURRENCES) {
+            try {
+                String espece = animateur.getEspece().getNomScientifique();
+                setChargementTxt("Chargement des occurrences de "+espece+" ("
+                        +annees.getDebut()+"-"+annees.getFin()+")...");
+
+                anneeUserInactiver.ping(()-> {
+                    donnees.getOccurences(espece, annees.getDebut(), annees.getFin(),
+                            terre.getGeoHash().getCharacterPrecision());
+                });
+
+            } catch(AucuneOccsPartitionException e) { e.printStackTrace(); }
+        }
+    }
+
+
+    @Override
+    public void recoitGeoHashParUser(GeoHash geoHash) {
         setChargementTxt("Chargement des observations sur "+geoHash.toBase32()+"...");
         geoHashUserInactiver.ping(()-> donnees.getObservations(geoHash) );
-        return true;
     }
 
 
@@ -125,7 +149,8 @@ public class ControllerFenetre
                 setChargementTxt("Chargement des occurrences de "+espece+" ("+debutAnnee+"-"+finAnnee+")...");
 
                 anneeUserInactiver.ping(()-> {
-                        donnees.getOccurences(espece, annees.getDebut(), annees.getFin());
+                        donnees.getOccurences(espece, annees.getDebut(), annees.getFin(),
+                                terre.getGeoHash().getCharacterPrecision());
                 });
 
             } catch(AucuneOccsPartitionException e) { e.printStackTrace(); }
@@ -137,7 +162,8 @@ public class ControllerFenetre
     @Override
     public void recoitEspeceParUser(String nom) {
         setChargementTxt("Recherche de l'espèce "+nom+"...");
-        especeUserInactiver.ping(()-> donnees.getOccurences(nom, annees.getDebut(), annees.getFin()) );
+        especeUserInactiver.ping(()-> donnees.getOccurences(nom, annees.getDebut(), annees.getFin(),
+                terre.getGeoHash().getCharacterPrecision()) );
     }
 
 

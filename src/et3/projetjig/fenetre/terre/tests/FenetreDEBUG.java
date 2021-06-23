@@ -18,9 +18,13 @@ class FenetreDEBUG implements CadreTerreListener {
     }
 
     @Override
-    public boolean recoitGeoHashParUser(GeoHash geoHash) {
+    public void recoitGeoHashParUser(GeoHash geoHash) {
         System.out.println("[FenetreDEBUG] L'utilisateur a défini un nouveau GeoHash : "+geoHash.toString());
         //cadreTerre.recoitGeoHash(geoHash);
-        return true;
+    }
+
+    @Override
+    public void recoitPrecisionParUser(GeoHash geoHash) {
+
     }
 }

@@ -7,9 +7,15 @@ public interface CadreTerreListener {
     /**
      * Permet de notifier à la fenêtre que l'utilisateur a sélectionné un nouveau GeoHash
      * @param geoHash le nouveau GeoHash
-     * @return true si le cadre 3D peut actualiser son GeoHash tout de suite, false pour le faire manuellement
      */
-    boolean recoitGeoHashParUser(GeoHash geoHash);
+    void recoitGeoHashParUser(GeoHash geoHash);
+
+
+    /**
+     * Permet de notifier à la fenêtre que l'utilisateur a sélectionné une nouvelle précision de GeoHash
+     * @param geoHash le GeoHash sélectionné de précision correspondante
+     */
+    void recoitPrecisionParUser(GeoHash geoHash);
 
 
 

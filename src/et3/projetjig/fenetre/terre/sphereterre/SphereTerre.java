@@ -43,7 +43,7 @@ public class SphereTerre extends Group {
     private final Group localisationPrincipale = new Group();
     private final Group histogramme = new Group();
 
-    private Point2D locPrincipaleCoords2d = null;
+    private Point2D locPrincipaleCoords2d = new Point2D(48.7093, 2.1710); // MDI
     private int nombreDeBitsGeoH = 10;
 
 
@@ -121,14 +121,14 @@ public class SphereTerre extends Group {
                                   Material material, Group listeNode) {
 
 
+
         double latLocalMax, lonLocalMax;
         for(double lat=latMin; lat < latMax; lat += PAS_CARRES) {
             latLocalMax = Math.min(lat+PAS_CARRES, latMax);
             for(double lon=lonMin; lon < lonMax; lon += PAS_CARRES) {
                 lonLocalMax = Math.min(lon+PAS_CARRES, lonMax);
-                listeNode.getChildren().add(
-                        creerCarreRigide(lat, latLocalMax, lon, lonLocalMax, material)
-                );
+                Group carreSimple = creerCarreRigide(lat, latLocalMax, lon, lonLocalMax, material);
+                listeNode.getChildren().add(carreSimple);
             }
         }
     }
@@ -139,6 +139,8 @@ public class SphereTerre extends Group {
         Group souscarres = new Group();
         this.carres.getChildren().add(souscarres);
         ajouteCarreANode(latMin, latMax, lonMin, lonMax, material, souscarres);
+        carres.setVisible(true);
+        souscarres.setVisible(true);
     }
 
     public void ajouterGeoHash(GeoHash geoHash, Color color) {

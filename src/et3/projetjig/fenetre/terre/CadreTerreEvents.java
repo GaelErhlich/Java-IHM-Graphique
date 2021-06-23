@@ -45,9 +45,8 @@ public class CadreTerreEvents {
                 double longitude = Math.min(Math.max( coords2d.getY() , -180),180);
                 GeoHash nouvGeoHash = GeoHash.withBitPrecision(latitude, longitude, terre.getNombreDeBits());
 
-                if(cadre.envoiNouvGeoHashVersFenetre(nouvGeoHash)) {
-                    terre.setGeoHash(nouvGeoHash);
-                }
+                cadre.envoiNouvGeoHashVersFenetre(nouvGeoHash);
+                terre.setGeoHash(nouvGeoHash);
             }
         });
     }
@@ -62,13 +61,11 @@ public class CadreTerreEvents {
                 try {
                     int nombreDeBits = terre.getNombreDeBits() + (int)(event.getDeltaX()/30)*5;
                     nombreDeBits = Math.min(Math.max(nombreDeBits, 0),60);
-                    System.out.println(nombreDeBits);
                     Point2D latEtLon = terre.getLocPrincipaleCoords2d();
                     GeoHash nouvGeoHash = GeoHash.withBitPrecision(latEtLon.getX(), latEtLon.getY(), nombreDeBits);
 
-                    if(cadreTerre.envoiNouvGeoHashVersFenetre(nouvGeoHash)) {
-                        terre.setGeoHash(nouvGeoHash);
-                    }
+                    cadreTerre.envoiNouvPrecisionVersFenetre(nouvGeoHash);
+                    terre.setGeoHash(nouvGeoHash);
                 }
                 catch(NullLocalisationPrincipale ignored) {}
             }

@@ -80,7 +80,7 @@ public class Model {
       GeoHash geohash = GeoHash.withCharacterPrecision(
               (nw.getDouble(1) + se.getDouble(1)) / 2,
               (nw.getDouble(0) + se.getDouble(0)) / 2,
-              8
+              3
       );
 
       occGlob[i] = new Occurrence(geohash, n);
@@ -109,7 +109,8 @@ public class Model {
   public void getOccurences(
     String nomEspece,
     short anneeDebut,
-    short anneeFin
+    short anneeFin,
+    int precision
   ) {
     try {
       URI uri;
@@ -162,7 +163,8 @@ public class Model {
         scientificNameParam = param.replace("+", "%20");
         URI uri2 = new URI(
           adresse +
-          "occurrence/grid/8?scientificname=" +
+          "occurrence/grid/"+
+          precision+"?scientificname=" +
           scientificNameParam +
           "&startdate=" +
           anneeDebut +
@@ -195,7 +197,7 @@ public class Model {
           GeoHash geohash = GeoHash.withCharacterPrecision(
             (nw.getDouble(1) + se.getDouble(1)) / 2,
             (nw.getDouble(0) + se.getDouble(0)) / 2,
-            8
+            precision
           );
 
           occGlob[i] = new Occurrence(geohash, n);
@@ -227,7 +229,8 @@ public class Model {
 
           URI uri3 = new URI(
             adresse +
-            "occurrence/grid/8?scientificname=" +
+            "occurrence/grid/"+
+            precision+"?scientificname=" +
             scientificNameParam +
             "&startdate=" +
             j +
@@ -259,7 +262,7 @@ public class Model {
             GeoHash geohash = GeoHash.withCharacterPrecision(
               (nw.getDouble(1) + se.getDouble(1)) / 2,
               (nw.getDouble(0) + se.getDouble(0)) / 2,
-              8
+              precision
             );
 
             occ[i] = new Occurrence(geohash, n);
@@ -337,9 +340,7 @@ public class Model {
 
         listener.recoitEspecesParBDD(result);
       }
-    } catch (URISyntaxException e1) {
-      listener.recoitErreurEspece(nomEspece);
-    } catch (UnsupportedEncodingException e1) {
+    } catch (URISyntaxException | UnsupportedEncodingException e1) {
       listener.recoitErreurEspece(nomEspece);
     }
   }
@@ -411,6 +412,6 @@ public class Model {
 
   public static void main(String[] args) {
     Model model = new Model();
-    model.getOccurences("a", (short) 2002, (short) 2008);
+    model.getOccurences("a", (short) 2002, (short) 2008, 1);
   }
 }
